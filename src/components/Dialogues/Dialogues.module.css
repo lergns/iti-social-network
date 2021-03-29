@@ -1,0 +1,16 @@
+.dialoguesPage {
+  display: grid;
+  grid-template-columns: 2fr 10fr;
+}
+
+.dialoguesList {
+  padding: 20px;
+}
+
+.active {
+  color: gold;
+}
+
+.messagesList {
+  padding: 20px;
+}
