@@ -9,7 +9,8 @@ import { RootStateType } from "./redux/state";
 
 type AppPropsType = {
   state: RootStateType;
-  addPost: (postText: string) => void;
+  addPost: () => void;
+  updateNewPostText: (newPostText: string) => void;
 };
 
 export function App(props: AppPropsType) {
@@ -21,14 +22,19 @@ export function App(props: AppPropsType) {
         <Route
           path={"/profile"}
           render={() => (
-            <Profile state={props.state.profilePage} addPost={props.addPost} />
+            <Profile
+              profilePageState={props.state.profilePage}
+              addPost={props.addPost}
+              updateNewPostText={props.updateNewPostText}
+            />
           )}
         />
         <Route
           path={"/dialogues"}
-          render={() => <Dialogues state={props.state.dialoguesPage} />}
+          render={() => (
+            <Dialogues dialoguesPageState={props.state.dialoguesPage} />
+          )}
         />
-        {/* render={} and component={} are mutually exclusive <Route /> attributes. render={} receives callback with actual JSX (unlike component={}, which received component (function) name -> it is possible to pass props via render={} ! To pass props via component={}, assign callback with JSX markup to a variable and pass it inside of component={} */}
       </div>
     </div>
   );

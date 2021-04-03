@@ -5,18 +5,25 @@ import { PostType } from "../../redux/state";
 
 type ProfileStateType = {
   posts: Array<PostType>;
+  newPostText: string;
 };
 
 type ProfilePropsType = {
-  state: ProfileStateType;
-  addPost: (postText: string) => void;
+  profilePageState: ProfileStateType;
+  addPost: () => void;
+  updateNewPostText: (inputPostText: string) => void;
 };
 
 export const Profile = (props: ProfilePropsType) => {
   return (
     <div>
       <ProfileInfo />
-      <MyPosts posts={props.state.posts} addPost={props.addPost} />
+      <MyPosts
+        posts={props.profilePageState.posts}
+        newPostText={props.profilePageState.newPostText}
+        addPost={props.addPost}
+        updateNewPostText={props.updateNewPostText}
+      />
     </div>
   );
 };

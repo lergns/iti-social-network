@@ -1,5 +1,3 @@
-import { reRenderApp } from "../render";
-
 export type PostType = {
   id: number;
   postText: string;
@@ -7,6 +5,7 @@ export type PostType = {
 };
 export type ProfilePageType = {
   posts: Array<PostType>;
+  newPostText: string;
 };
 export type DialogueItemType = {
   id: number;
@@ -32,6 +31,7 @@ const state: RootStateType = {
       { id: 2, postText: "How are you, guys?", likesCount: 8 },
       { id: 3, postText: "I'm boss!!!!", likesCount: 2 },
     ],
+    newPostText: "",
   },
   dialoguesPage: {
     dialogues: [
@@ -51,14 +51,26 @@ const state: RootStateType = {
   },
 };
 
-export const addPost = (postText: string) => {
+export const addPost = () => {
   const newPost: PostType = {
     id: 5,
-    postText,
+    postText: state.profilePage.newPostText, // no need to receive postText from as input to addPost() anymore - taking the same value from state directly !
     likesCount: 0,
   };
   state.profilePage.posts.push(newPost);
-  reRenderApp(state); // re-rendering the whole app with an updated state !
-}; // function, which mutates the state
+  state.profilePage.newPostText = ""; // clearing the input <textarea> field on post add
+  onChangeReRenderApp();
+};
+
+export const updateNewPostText = (inputPostText: string) => {
+  state.profilePage.newPostText = inputPostText; // inputPostText from UI <textarea>
+  onChangeReRenderApp();
+};
+
+let onChangeReRenderApp = () => {};
+
+export const subscribe = (observer: () => void) => {
+  onChangeReRenderApp = observer; // observer pattern !
+};
 
 export default state;

@@ -10,14 +10,16 @@ type DialoguesStateType = {
 };
 
 type DialoguesPropsType = {
-  state: DialoguesStateType;
+  dialoguesPageState: DialoguesStateType;
 };
 
 export const Dialogues = (props: DialoguesPropsType) => {
-  const dialoguesElements = props.state.dialogues.map((dialogue) => (
-    <DialogueItem personName={dialogue.personName} id={dialogue.id} />
-  ));
-  const messagesElements = props.state.messages.map((message) => (
+  const dialoguesElements = props.dialoguesPageState.dialogues.map(
+    (dialogue) => (
+      <DialogueItem personName={dialogue.personName} id={dialogue.id} />
+    )
+  );
+  const messagesElements = props.dialoguesPageState.messages.map((message) => (
     <Message messageText={message.messageText} id={message.id} />
   ));
 

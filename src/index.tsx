@@ -1,6 +1,23 @@
 import React from "react";
 import "./index.css";
-import state from "./redux/state";
-import { reRenderApp } from "./render";
+import state, { addPost, subscribe, updateNewPostText } from "./redux/state";
+import ReactDOM from "react-dom";
+import { App } from "./App";
+import { BrowserRouter } from "react-router-dom";
 
-reRenderApp(state);
+const renderApp = () => {
+  ReactDOM.render(
+    <BrowserRouter>
+      <App
+        state={state}
+        addPost={addPost}
+        updateNewPostText={updateNewPostText}
+      />
+    </BrowserRouter>,
+    document.getElementById("root")
+  );
+};
+
+subscribe(renderApp); // subscriber/observer callback
+
+renderApp();
