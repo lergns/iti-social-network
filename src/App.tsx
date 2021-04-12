@@ -5,12 +5,11 @@ import { Header } from "./components/Header/Header";
 import { Navbar } from "./components/Navbar/Navbar";
 import { Dialogues } from "./components/Dialogues/Dialogues";
 import { Profile } from "./components/Profile/Profile";
-import { RootStateType } from "./redux/state";
+import { ActionTypes, RootStateType } from "./redux/store";
 
 type AppPropsType = {
   state: RootStateType;
-  addPost: () => void;
-  updateNewPostText: (newPostText: string) => void;
+  dispatch: (action: ActionTypes) => void;
 };
 
 export function App(props: AppPropsType) {
@@ -24,15 +23,17 @@ export function App(props: AppPropsType) {
           render={() => (
             <Profile
               profilePageState={props.state.profilePage}
-              addPost={props.addPost}
-              updateNewPostText={props.updateNewPostText}
+              dispatch={props.dispatch}
             />
           )}
         />
         <Route
           path={"/dialogues"}
           render={() => (
-            <Dialogues dialoguesPageState={props.state.dialoguesPage} />
+            <Dialogues
+              dialoguesPageState={props.state.dialoguesPage}
+              dispatch={props.dispatch}
+            />
           )}
         />
       </div>

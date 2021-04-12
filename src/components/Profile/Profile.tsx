@@ -1,17 +1,16 @@
 import React from "react";
 import { MyPosts } from "./MyPosts/MyPosts";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
-import { PostType } from "../../redux/state";
+import { ActionTypes, PostType } from "../../redux/store";
 
-type ProfileStateType = {
+type ProfilePageStateType = {
   posts: Array<PostType>;
   newPostText: string;
 };
 
 type ProfilePropsType = {
-  profilePageState: ProfileStateType;
-  addPost: () => void;
-  updateNewPostText: (inputPostText: string) => void;
+  profilePageState: ProfilePageStateType;
+  dispatch: (action: ActionTypes) => void;
 };
 
 export const Profile = (props: ProfilePropsType) => {
@@ -21,8 +20,7 @@ export const Profile = (props: ProfilePropsType) => {
       <MyPosts
         posts={props.profilePageState.posts}
         newPostText={props.profilePageState.newPostText}
-        addPost={props.addPost}
-        updateNewPostText={props.updateNewPostText}
+        dispatch={props.dispatch}
       />
     </div>
   );

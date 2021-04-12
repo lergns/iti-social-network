@@ -1,13 +1,13 @@
 import React, { ChangeEvent } from "react";
 import classes from "./MyPosts.module.css";
 import { Post } from "./Post/Post";
-import { PostType } from "../../../redux/state";
+import { ActionTypes, PostType } from "../../../redux/store";
+import { addPostAC, updateNewPostTextAC } from "../../../redux/profileReducer";
 
 export type MyPostsPropsType = {
   posts: Array<PostType>;
   newPostText: string;
-  addPost: () => void;
-  updateNewPostText: (inputPostText: string) => void;
+  dispatch: (action: ActionTypes) => void;
 };
 
 export const MyPosts = (props: MyPostsPropsType) => {
@@ -16,12 +16,12 @@ export const MyPosts = (props: MyPostsPropsType) => {
   ));
 
   const addNewPost = () => {
-    props.addPost(); // logic encapsulated in state.ts file
+    props.dispatch(addPostAC()); // actually calling store's method as callback - if not for the .bind(), .addPost()'s ( before .dispatch() ) .this keyword would've been === props: MyPostsPropsType !
   };
 
   const onPostChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    props.updateNewPostText(event.currentTarget.value);
-  }; // on input change, passing the input value (inputPostText) to newPostText (from the very state) as its value
+    props.dispatch(updateNewPostTextAC(event.currentTarget.value)); // passing value from UI input into store's dispatch() via callbacks' chain
+  };
 
   return (
     <div className={classes.postsBlock}>

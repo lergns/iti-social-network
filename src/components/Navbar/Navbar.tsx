@@ -10,7 +10,7 @@ export const Navbar = (props: any) => {
       <div className={classes.item}>
         <NavLink to={"/profile"} activeClassName={classes.active}>
           Profile
-        </NavLink>{" "}
+        </NavLink>
       </div>
       <div className={classes.item}>
         <NavLink to={"/dialogues"} activeClassName={classes.active}>
