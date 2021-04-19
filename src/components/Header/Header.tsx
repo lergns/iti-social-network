@@ -1,9 +1,7 @@
 import React from "react";
 import classes from "./Header.module.css";
 
-/*type HeaderPropsType = {};*/
-
-export const Header = (props: any) => {
+export const Header = () => {
   return (
     <header className={classes.header}>
       <img

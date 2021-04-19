@@ -1,39 +1,33 @@
 import React, { ChangeEvent } from "react";
 import classes from "./Dialogues.module.css";
-import { DialogueItem } from "./DialogueItem/DialogueItem";
-import { Message } from "./Message/Message";
-import { ActionTypes, DialogueItemType, MessageType } from "../../redux/store";
 import {
-  sendMessageAC,
-  updateNewMessageTextAC,
-} from "../../redux/dialoguesReducer";
+  DialogueItem,
+  DialogueItemPropsType as DialogueItemType,
+} from "./DialogueItem/DialogueItem";
+import { Message, MessagePropsType as MessageType } from "./Message/Message";
 
-type DialoguesPageStateType = {
+type DialoguesPropsType = {
   messages: Array<MessageType>;
   dialogues: Array<DialogueItemType>;
   newMessageText: string;
-};
-
-type DialoguesPropsType = {
-  dialoguesPageState: DialoguesPageStateType;
-  dispatch: (action: ActionTypes) => void;
+  updateNewMessageText: (newMessageText: string) => void;
+  sendMessage: () => void;
 };
 
 export const Dialogues = (props: DialoguesPropsType) => {
-  const dialogueElements = props.dialoguesPageState.dialogues.map(
-    (dialogue) => (
-      <DialogueItem personName={dialogue.personName} id={dialogue.id} />
-    )
-  );
-  const messageElements = props.dialoguesPageState.messages.map((message) => (
+  const dialogueElements = props.dialogues.map((dialogue) => (
+    <DialogueItem personName={dialogue.personName} id={dialogue.id} />
+  ));
+  const messageElements = props.messages.map((message) => (
     <Message messageText={message.messageText} id={message.id} />
   ));
 
-  const changeNewMessageText = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    props.dispatch(updateNewMessageTextAC(event.currentTarget.value)); // dispatching action object (which received its input parameter from event directly), returned by AC function
+  const onMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    props.updateNewMessageText(event.currentTarget.value);
   };
-  const sendMessage = () => {
-    props.dispatch(sendMessageAC());
+
+  const onMessageSending = () => {
+    props.sendMessage();
   };
 
   return (
@@ -44,13 +38,13 @@ export const Dialogues = (props: DialoguesPropsType) => {
         <div>
           <div>
             <textarea
-              value={props.dialoguesPageState.newMessageText}
-              onChange={changeNewMessageText}
+              value={props.newMessageText}
+              onChange={onMessageChange}
               placeholder={"Enter your message"}
             />
           </div>
           <div>
-            <button onClick={sendMessage}>Send</button>
+            <button onClick={onMessageSending}>Send</button>
           </div>
         </div>
       </div>

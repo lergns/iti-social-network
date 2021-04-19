@@ -1,22 +1,22 @@
 import React from "react";
 import "./index.css";
-import store from "./redux/store";
+import { reduxStore } from "./redux/redux-store";
 import ReactDOM from "react-dom";
 import { App } from "./App";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "./redux/StoreContext";
 
 const renderApp = () => {
   ReactDOM.render(
     <BrowserRouter>
-      <App
-        state={store.getState()} // getState() - with () --> returns value of method ("getter"), NOT callback !
-        dispatch={store.dispatch.bind(store)} // passing callbacks - not CALLED () on store directly --> this keyword will be set to an object, calling the function; .bind() has to be set WHEN passing method as CALLBACK !
-      />
+      <Provider store={reduxStore}>
+        <App />
+      </Provider>
     </BrowserRouter>,
     document.getElementById("root")
   );
 };
 
-store.subscribe(renderApp);
+reduxStore.subscribe(renderApp); // Redux's reduxStore doesn't pass state to _callSubscriber() function on its call
 
 renderApp();

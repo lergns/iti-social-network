@@ -1,51 +1,40 @@
-import profileReducer, {
-  addPostAC,
-  updateNewPostTextAC,
-} from "./profileReducer";
-import dialoguesReducer, {
-  sendMessageAC,
-  updateNewMessageTextAC,
-} from "./dialoguesReducer";
+import { ActionTypes } from "./redux-store";
+import { dialoguesReducer } from "./dialoguesReducer";
+import { profileReducer } from "./profileReducer";
 
-export type PostType = {
-  id: number;
-  postText: string;
-  likesCount: number;
+type StoreType = {
+  _state: RootStateType;
+  _callSubscriber: () => void;
+  getState: () => RootStateType;
+  subscribe: (observer: () => void) => void;
+  dispatch: (action: ActionTypes) => void;
 };
-export type ProfilePageType = {
-  posts: Array<PostType>;
-  newPostText: string;
+type RootStateType = {
+  profilePage: ProfilePageType;
+  dialoguesPage: DialoguesPageType;
 };
-export type DialogueItemType = {
-  id: number;
-  personName: string;
-};
-export type MessageType = {
-  id: number;
-  messageText: string;
-};
-export type DialoguesPageType = {
+type DialoguesPageType = {
   dialogues: Array<DialogueItemType>;
   messages: Array<MessageType>;
   newMessageText: string;
 };
-export type RootStateType = {
-  profilePage: ProfilePageType;
-  dialoguesPage: DialoguesPageType;
+type DialogueItemType = {
+  id: number;
+  personName: string;
 };
-export type StoreType = {
-  _state: RootStateType;
-  _callSubscriber: () => void;
-  getState: () => RootStateType;
-  subscribe: (observer: () => void) => void; // setting type for HOF in one line
-  dispatch: (action: ActionTypes) => void; // .dispatch()'s input action object can be of either type
+type MessageType = {
+  id: number;
+  messageText: string;
 };
-export type ActionTypes =
-  | ReturnType<typeof addPostAC>
-  | ReturnType<typeof updateNewPostTextAC>
-  | ReturnType<typeof updateNewMessageTextAC>
-  | ReturnType<typeof sendMessageAC>; // storing all possible actions' types in one type - to avoid huge typing in components' props; TS will automatically create types from return values of AC functions !
-// TYPES
+type ProfilePageType = {
+  posts: Array<PostType>;
+  newPostText: string;
+};
+type PostType = {
+  id: number;
+  postText: string;
+  likesCount: number;
+};
 
 const store: StoreType = {
   _state: {
@@ -79,8 +68,8 @@ const store: StoreType = {
       ],
       newMessageText: "",
     },
-  }, // _PROPERTY - private properties (can only be addressed from inside the store object via .this keyword)
-  _callSubscriber() {}, // former onChangeReRenderApp()
+  },
+  _callSubscriber() {},
 
   getState() {
     return this._state;
@@ -90,7 +79,7 @@ const store: StoreType = {
   },
 
   dispatch(action) {
-    this._state.profilePage = profileReducer(this._state.profilePage, action); // passing different state parts, but same action !
+    this._state.profilePage = profileReducer(this._state.profilePage, action);
     this._state.dialoguesPage = dialoguesReducer(
       this._state.dialoguesPage,
       action

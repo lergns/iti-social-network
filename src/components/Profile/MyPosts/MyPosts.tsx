@@ -1,13 +1,12 @@
 import React, { ChangeEvent } from "react";
 import classes from "./MyPosts.module.css";
-import { Post } from "./Post/Post";
-import { ActionTypes, PostType } from "../../../redux/store";
-import { addPostAC, updateNewPostTextAC } from "../../../redux/profileReducer";
+import { Post, PostPropsType as PostType } from "./Post/Post";
 
-export type MyPostsPropsType = {
+type MyPostsPropsType = {
   posts: Array<PostType>;
   newPostText: string;
-  dispatch: (action: ActionTypes) => void;
+  updateNewPostText: (inputPostText: string) => void;
+  addPost: () => void;
 };
 
 export const MyPosts = (props: MyPostsPropsType) => {
@@ -15,12 +14,12 @@ export const MyPosts = (props: MyPostsPropsType) => {
     <Post postText={post.postText} likesCount={post.likesCount} id={post.id} />
   ));
 
-  const addNewPost = () => {
-    props.dispatch(addPostAC()); // actually calling store's method as callback - if not for the .bind(), .addPost()'s ( before .dispatch() ) .this keyword would've been === props: MyPostsPropsType !
+  const onPostAdding = () => {
+    props.addPost();
   };
 
   const onPostChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    props.dispatch(updateNewPostTextAC(event.currentTarget.value)); // passing value from UI input into store's dispatch() via callbacks' chain
+    props.updateNewPostText(event.currentTarget.value);
   };
 
   return (
@@ -31,7 +30,7 @@ export const MyPosts = (props: MyPostsPropsType) => {
           <textarea value={props.newPostText} onChange={onPostChange} />
         </div>
         <div>
-          <button onClick={addNewPost}>Add post</button>
+          <button onClick={onPostAdding}>Add post</button>
         </div>
       </div>
       <div className={classes.posts}>{postsElements}</div>
