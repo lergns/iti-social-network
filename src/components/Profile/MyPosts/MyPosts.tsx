@@ -1,17 +1,16 @@
 import React, { ChangeEvent } from "react";
 import classes from "./MyPosts.module.css";
-import { Post, PostPropsType as PostType } from "./Post/Post";
-
-type MyPostsPropsType = {
-  posts: Array<PostType>;
-  newPostText: string;
-  updateNewPostText: (inputPostText: string) => void;
-  addPost: () => void;
-};
+import { Post } from "./Post/Post";
+import { MyPostsPropsType } from "./MyPostsContainer";
 
 export const MyPosts = (props: MyPostsPropsType) => {
   const postsElements = props.posts.map((post) => (
-    <Post postText={post.postText} likesCount={post.likesCount} id={post.id} />
+    <Post
+      key={post.id}
+      postText={post.postText}
+      likesCount={post.likesCount}
+      id={post.id}
+    />
   ));
 
   const onPostAdding = () => {

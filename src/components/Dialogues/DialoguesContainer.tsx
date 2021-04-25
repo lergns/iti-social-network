@@ -1,35 +1,51 @@
-import React from "react";
 import {
+  DialogueItemType,
+  MessageType,
   sendMessageAC,
   updateNewMessageTextAC,
 } from "../../redux/dialoguesReducer";
-import { StoreContext } from "../../redux/StoreContext";
 import { Dialogues } from "./Dialogues";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { RootStateType } from "../../redux/redux-store";
+// IMPORTS
 
-export const DialoguesContainer = () => {
-  return (
-    // return of <DialoguesContainer>
-    <StoreContext.Consumer>
-      {(reduxStore) => {
-        const dialoguesPageState = reduxStore.getState().dialoguesPage;
-
-        const updateNewMessageText = (newMessageText: string) => {
-          reduxStore.dispatch(updateNewMessageTextAC(newMessageText));
-        };
-        const sendMessage = () => {
-          reduxStore.dispatch(sendMessageAC());
-        };
-        return (
-          // return of <StoreContext.Consumer>'s inner callback
-          <Dialogues
-            messages={dialoguesPageState.messages}
-            dialogues={dialoguesPageState.dialogues}
-            newMessageText={dialoguesPageState.newMessageText}
-            updateNewMessageText={updateNewMessageText}
-            sendMessage={sendMessage}
-          />
-        );
-      }}
-    </StoreContext.Consumer>
-  );
+type MapStatePropsType = {
+  messages: Array<MessageType>;
+  dialogues: Array<DialogueItemType>;
+  newMessageText: string;
 };
+type MapDispatchPropsType = {
+  updateNewMessageText: (newMessageText: string) => void;
+  sendMessage: () => void;
+};
+export type DialoguesPropsType = MapStatePropsType & MapDispatchPropsType; // exporting presentational component's props type from its container component
+// TYPES
+
+const mapStateToProps = (state: RootStateType): MapStatePropsType => {
+  return {
+    messages: state.dialoguesPage.messages,
+    dialogues: state.dialoguesPage.dialogues,
+    newMessageText: state.dialoguesPage.newMessageText,
+  };
+}; // mapStateToProps(store.state) receives state as its parameter (input) value, returns props object with values that presentational component needs to receive from store.state (via its container component)
+/* mapStateToProps(state) is called each time its input (state branch - messages/dialogues/newMessageText/etc.) is being changed --> new object with MapStatePropsType type is created --> the newly-created object's property-value pairs are compared to those of the object, formerly created by mapStateToProps(state) --> if there were changes to mapStateToProps(state)'s state branch, the component is being re-rendered */
+
+// Dispatch - imported from redux !
+const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
+  return {
+    updateNewMessageText: (newMessageText: string) => {
+      dispatch(updateNewMessageTextAC(newMessageText));
+    },
+    sendMessage: () => {
+      dispatch(sendMessageAC());
+    },
+  };
+}; // mapDispatchToProps(store.dispatch.bind(store)) receives binded dispatch() as its parameter (input) value, returns props object with callbacks that presentational component needs to receive from store.state (via its container component)
+
+export const DialoguesContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(
+  Dialogues
+); /* connect() - returns callback, second () - calls that callback! ; connect(MAP STATE TO PROPS, MAP DISPATCH TO PROPS)(PRESENTATIONAL COMPONENT TO BE WRAPPED UP WITH CONTAINER COMPONENT) ; connect()() creates container component, which passes all props that are required by the presentational component and renders presentational component inside of itself (inside of that container component) ; connect()() has its own inner .subscribe(), which prevents re-rendering component if it didn't receive NEW object ( immutability principle ! ) as component's updated state ( mapStateToProps(state)'s output ) */

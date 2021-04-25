@@ -1,11 +1,6 @@
 import React from "react";
 import classes from "./Post.module.css";
-
-export type PostPropsType = {
-  id: number;
-  postText: string;
-  likesCount: number;
-};
+import { PostType as PostPropsType } from "../../../../redux/profileReducer";
 
 export const Post = (props: PostPropsType) => {
   return (
@@ -14,7 +9,7 @@ export const Post = (props: PostPropsType) => {
         src={
           "https://www.uni-regensburg.de/Fakultaeten/phil_Fak_II/Psychologie/Psy_II/beautycheck/english/prototypen/w_sexy_gr.jpg"
         }
-        alt={"person photo"}
+        alt={"person"}
       />
       {props.postText}
       <div>

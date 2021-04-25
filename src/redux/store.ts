@@ -1,6 +1,9 @@
-import { ActionTypes } from "./redux-store";
-import { dialoguesReducer } from "./dialoguesReducer";
-import { profileReducer } from "./profileReducer";
+/*
+import {
+  dialoguesReducer,
+  DialoguesReducerActionTypes,
+} from "./dialoguesReducer";
+import { usersReducer, UsersReducerActionTypes } from "./usersReducer";
 
 type StoreType = {
   _state: RootStateType;
@@ -27,14 +30,15 @@ type MessageType = {
   messageText: string;
 };
 type ProfilePageType = {
-  posts: Array<PostType>;
+  posts: Array<UserType>;
   newPostText: string;
 };
-type PostType = {
+type UserType = {
   id: number;
   postText: string;
   likesCount: number;
 };
+type ActionTypes = DialoguesReducerActionTypes & UsersReducerActionTypes;
 
 const store: StoreType = {
   _state: {
@@ -79,14 +83,17 @@ const store: StoreType = {
   },
 
   dispatch(action) {
-    this._state.profilePage = profileReducer(this._state.profilePage, action);
+    this._state.profilePage = usersReducer(this._state.profilePage, action);
     this._state.dialoguesPage = dialoguesReducer(
       this._state.dialoguesPage,
       action
-    ); // mutating _state - to be refactored !
+    );
 
     this._callSubscriber();
   },
 };
 
 export default store;
+*/
+
+export {};

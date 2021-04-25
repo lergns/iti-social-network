@@ -1,25 +1,23 @@
 import React, { ChangeEvent } from "react";
 import classes from "./Dialogues.module.css";
-import {
-  DialogueItem,
-  DialogueItemPropsType as DialogueItemType,
-} from "./DialogueItem/DialogueItem";
-import { Message, MessagePropsType as MessageType } from "./Message/Message";
-
-type DialoguesPropsType = {
-  messages: Array<MessageType>;
-  dialogues: Array<DialogueItemType>;
-  newMessageText: string;
-  updateNewMessageText: (newMessageText: string) => void;
-  sendMessage: () => void;
-};
+import { DialogueItem } from "./DialogueItem/DialogueItem";
+import { Message } from "./Message/Message";
+import { DialoguesPropsType } from "./DialoguesContainer";
 
 export const Dialogues = (props: DialoguesPropsType) => {
   const dialogueElements = props.dialogues.map((dialogue) => (
-    <DialogueItem personName={dialogue.personName} id={dialogue.id} />
+    <DialogueItem
+      key={dialogue.id}
+      personName={dialogue.personName}
+      id={dialogue.id}
+    />
   ));
   const messageElements = props.messages.map((message) => (
-    <Message messageText={message.messageText} id={message.id} />
+    <Message
+      key={message.id}
+      messageText={message.messageText}
+      id={message.id}
+    />
   ));
 
   const onMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {

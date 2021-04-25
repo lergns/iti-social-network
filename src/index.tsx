@@ -1,22 +1,19 @@
 import React from "react";
 import "./index.css";
-import { reduxStore } from "./redux/redux-store";
+import { store } from "./redux/redux-store";
 import ReactDOM from "react-dom";
 import { App } from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "./redux/StoreContext";
+import { Provider } from "react-redux";
 
-const renderApp = () => {
-  ReactDOM.render(
-    <BrowserRouter>
-      <Provider store={reduxStore}>
-        <App />
-      </Provider>
-    </BrowserRouter>,
-    document.getElementById("root")
-  );
-};
+ReactDOM.render(
+  <BrowserRouter>
+    <Provider store={store}>
+      {/* react-redux's Provider - also uses Context API */}
+      <App />
+    </Provider>
+  </BrowserRouter>,
+  document.getElementById("root")
+);
 
-reduxStore.subscribe(renderApp); // Redux's reduxStore doesn't pass state to _callSubscriber() function on its call
-
-renderApp();
+// renderApp() function is redundant - <App /> is rendered once, after that, container components, created with connect()() will re-render due to their own inner .subscribe() !
