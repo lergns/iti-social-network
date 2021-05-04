@@ -36,12 +36,12 @@ const profileInitialState = {
 };
 
 export const profileReducer = (
-  state: ProfileInitialStateType = profileInitialState,
+  profileState: ProfileInitialStateType = profileInitialState,
   action: ProfileReducerActionTypes
 ): ProfileInitialStateType => {
   switch (action.type) {
     case ADD_POST: {
-      const updatedState = { ...state, posts: [...state.posts] };
+      const updatedState = { ...profileState, posts: [...profileState.posts] };
       const newPost = {
         id: 4,
         postText: updatedState.newPostText,
@@ -53,9 +53,9 @@ export const profileReducer = (
     }
 
     case UPDATE_NEW_POST_TEXT:
-      return { ...state, newPostText: action.inputPostText };
+      return { ...profileState, newPostText: action.inputPostText };
 
     default:
-      return state;
+      return profileState;
   }
 };

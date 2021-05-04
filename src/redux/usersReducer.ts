@@ -1,14 +1,13 @@
-type LocationType = {
-  country: string;
-  city: string;
+type PhotosType = {
+  small: string;
+  large: string;
 };
 export type UserType = {
   id: number;
-  fullName: string;
+  name: string;
   status: string;
-  isFollowed: boolean;
-  photoURL: string;
-  location: LocationType;
+  followed: boolean;
+  photos: PhotosType;
 };
 type UsersInitialStateType = typeof usersInitialState;
 type UsersReducerActionTypes =
@@ -39,69 +38,74 @@ const SET_USERS = "SET-USERS";
 
 const usersInitialState = {
   users: [
-    {
+    /*{
       id: 1,
-      fullName: "Alex",
+      name: "Alex",
       status: "I love Stacy!",
-      isFollowed: false,
-      photoURL:
-        "https://m.gorod.cn.ua/image/news/gorod_5/gr_19.09.13_serdyuk.jpg",
-      location: { country: "Ukraine", city: "Vinnytsia" },
+      followed: false,
+      photos: {
+        large: "",
+        small: "",
+      },
     },
     {
       id: 2,
-      fullName: "Stacy",
+      name: "Stacy",
       status: "I love Gracy and Chill!",
-      isFollowed: true,
-      photoURL:
-        "https://sun9-32.userapi.com/impf/KqU4JU9aen1UDMSYYLOUTE2Zon9QfWM8F_Y4Fw/LUjpqeqEKjY.jpg?size=320x478&quality=96&sign=68e58198542832fdf293450863d631a6&type=album",
-      location: { country: "Ukraine", city: "Chernihiv" },
+      followed: true,
+      photos: {
+        large: "",
+        small: "",
+      },
     },
     {
       id: 3,
-      fullName: "Gracy",
+      name: "Gracy",
       status: "zzZz",
-      isFollowed: true,
-      photoURL:
-        "https://sun9-30.userapi.com/impf/c637218/v637218150/3fe1a/hRat8KEQLDc.jpg?size=483x604&quality=96&sign=19887f01eb30082af86cfcb242397acb&c_uniq_tag=dGx4lq5uixXCYHrRWrR_mc2cXBhKxB8Jq1IRNwFhasI&type=album",
-      location: { country: "Ukraine", city: "Starosillya" },
+      followed: true,
+      photos: {
+        large: "",
+        small: "",
+      },
     },
     {
       id: 4,
-      fullName: "Chill",
+      name: "Chill",
       status: "Woof!",
-      isFollowed: false,
-      photoURL: "https://nekusaka.com/wp-content/uploads/2017/02/korgi-15.jpg",
-      location: { country: "UK", city: "London" },
-    },
+      followed: false,
+      photos: {
+        large: "",
+        small: "",
+      },
+    },*/
   ] as Array<UserType>,
 };
 
 export const usersReducer = (
-  state: UsersInitialStateType = usersInitialState,
+  usersState: UsersInitialStateType = usersInitialState,
   action: UsersReducerActionTypes
 ): UsersInitialStateType => {
   switch (action.type) {
     case FOLLOW:
       return {
-        ...state,
-        users: state.users.map((user) =>
-          user.id === action.userID ? { ...user, isFollowed: true } : user
-        ), // also copying USER to be changed (state === Array<UserType>) !
+        ...usersState,
+        users: usersState.users.map((user) =>
+          user.id === action.userID ? { ...user, followed: true } : user
+        ), // also copying USER to be changed
       };
 
     case UNFOLLOW:
       return {
-        ...state,
-        users: state.users.map((user) =>
-          user.id === action.userID ? { ...user, isFollowed: false } : user
+        ...usersState,
+        users: usersState.users.map((user) =>
+          user.id === action.userID ? { ...user, followed: false } : user
         ),
       };
 
     case SET_USERS:
-      return { ...state, users: [...state.users, ...action.users] }; // adding users received from action dispatch to the end of copy of the original state.users array
+      return { ...usersState, users: [...usersState.users, ...action.users] };
 
     default:
-      return state;
+      return usersState;
   }
 };

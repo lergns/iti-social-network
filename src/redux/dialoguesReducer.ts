@@ -40,21 +40,23 @@ const dialoguesInitialState = {
     { id: 3, messageText: "I don't use public transport" },
     { id: 4, messageText: "Let's go get some buzz" },
     { id: 5, messageText: "$5,000/month is not enough, man..." },
-  ] as Array<MessageType>, // as GENERIC<TYPE> - used when type is auto-set by typeof TS operator; not to be set on primitives
+  ] as Array<MessageType>,
   newMessageText: "",
 };
 
-// reducer refactored - pure function now !
 export const dialoguesReducer = (
-  state: DialoguesInitialStateType = dialoguesInitialState,
+  dialoguesState: DialoguesInitialStateType = dialoguesInitialState,
   action: DialoguesReducerActionTypes
 ): DialoguesInitialStateType => {
   switch (action.type) {
     case UPDATE_NEW_MESSAGE_TEXT:
-      return { ...state, newMessageText: action.inputMessageText }; // if reducer is only changing primitive property type of received state object, making deep copy is redundant --> only copy parts of state that have to be mutated in each particular action.type case of reducer !
+      return { ...dialoguesState, newMessageText: action.inputMessageText };
 
     case SEND_MESSAGE: {
-      const updatedState = { ...state, messages: [...state.messages] };
+      const updatedState = {
+        ...dialoguesState,
+        messages: [...dialoguesState.messages],
+      };
       updatedState.messages.push({
         id: 6,
         messageText: updatedState.newMessageText,
@@ -64,6 +66,6 @@ export const dialoguesReducer = (
     }
 
     default:
-      return state;
+      return dialoguesState;
   }
 };

@@ -10,8 +10,7 @@ import { UsersContainer } from "./components/Users/UsersContainer";
 export function App() {
   return (
     <div className={"app-wrapper"}>
-      <Header />
-      <Navbar />
+      <Header /> <Navbar />
       <div className={"app-wrapper-content"}>
         <Route path={"/profile"} render={() => <Profile />} />
         <Route path={"/dialogues"} render={() => <DialoguesContainer />} />

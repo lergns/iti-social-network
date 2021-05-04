@@ -9,11 +9,8 @@ import { Provider } from "react-redux";
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
-      {/* react-redux's Provider - also uses Context API */}
       <App />
     </Provider>
   </BrowserRouter>,
   document.getElementById("root")
 );
-
-// renderApp() function is redundant - <App /> is rendered once, after that, container components, created with connect()() will re-render due to their own inner .subscribe() !
