@@ -8,16 +8,16 @@ export type MessageType = {
 };
 type DialoguesInitialStateType = typeof dialoguesInitialState;
 type DialoguesReducerActionTypes =
-  | ReturnType<typeof updateNewMessageTextAC>
-  | ReturnType<typeof sendMessageAC>;
+  | ReturnType<typeof updateNewMessageText>
+  | ReturnType<typeof sendMessage>;
 // TYPES
 
-export const updateNewMessageTextAC = (inputMessageText: string) =>
+export const updateNewMessageText = (inputMessageText: string) =>
   ({
     type: UPDATE_NEW_MESSAGE_TEXT,
     inputMessageText,
   } as const);
-export const sendMessageAC = () =>
+export const sendMessage = () =>
   ({
     type: SEND_MESSAGE,
   } as const);

@@ -1,5 +1,4 @@
-/*
-import {
+/*import {
   dialoguesReducer,
   DialoguesReducerActionTypes,
 } from "./dialoguesReducer";
@@ -93,7 +92,6 @@ const store: StoreType = {
   },
 };
 
-export default store;
-*/
+export default store;*/
 
 export {};

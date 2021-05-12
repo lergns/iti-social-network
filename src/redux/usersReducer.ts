@@ -11,30 +11,51 @@ export type UserType = {
 };
 type UsersInitialStateType = typeof usersInitialState;
 type UsersReducerActionTypes =
-  | ReturnType<typeof followAC>
-  | ReturnType<typeof unfollowAC>
-  | ReturnType<typeof setUsersAC>;
+  | ReturnType<typeof follow>
+  | ReturnType<typeof unfollow>
+  | ReturnType<typeof setUsers>
+  | ReturnType<typeof setCurrentPage>
+  | ReturnType<typeof setTotalUsersCount>
+  | ReturnType<typeof setIsFetching>;
 // TYPES
 
-export const followAC = (userID: number) =>
+export const follow = (userID: number) =>
   ({
     type: FOLLOW,
     userID,
   } as const);
-export const unfollowAC = (userID: number) =>
+export const unfollow = (userID: number) =>
   ({
     type: UNFOLLOW,
     userID,
   } as const);
-export const setUsersAC = (users: Array<UserType>) =>
+export const setUsers = (users: Array<UserType>) =>
   ({
     type: SET_USERS,
     users,
+  } as const);
+export const setCurrentPage = (currentPage: number) =>
+  ({
+    type: SET_CURRENT_PAGE,
+    currentPage,
+  } as const);
+export const setTotalUsersCount = (totalUsersCount: number) =>
+  ({
+    type: SET_TOTAL_USERS_COUNT,
+    totalUsersCount,
+  } as const);
+export const setIsFetching = (newIsFetching: boolean) =>
+  ({
+    type: SET_IS_FETCHING,
+    newIsFetching,
   } as const);
 
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
 const SET_USERS = "SET-USERS";
+const SET_CURRENT_PAGE = "SET-CURRENT-PAGE";
+const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT";
+const SET_IS_FETCHING = "TOGGLE-IS-FETCHING";
 
 const usersInitialState = {
   users: [
@@ -79,6 +100,10 @@ const usersInitialState = {
       },
     },*/
   ] as Array<UserType>,
+  pageSize: 100,
+  totalUsersCount: 0,
+  currentPage: 1,
+  isFetching: false,
 };
 
 export const usersReducer = (
@@ -103,7 +128,16 @@ export const usersReducer = (
       };
 
     case SET_USERS:
-      return { ...usersState, users: [...usersState.users, ...action.users] };
+      return { ...usersState, users: action.users };
+
+    case SET_CURRENT_PAGE:
+      return { ...usersState, currentPage: action.currentPage };
+
+    case SET_TOTAL_USERS_COUNT:
+      return { ...usersState, totalUsersCount: action.totalUsersCount };
+
+    case SET_IS_FETCHING:
+      return { ...usersState, isFetching: action.newIsFetching };
 
     default:
       return usersState;
