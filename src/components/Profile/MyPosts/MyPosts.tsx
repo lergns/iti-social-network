@@ -3,7 +3,7 @@ import classes from "./MyPosts.module.css";
 import { Post } from "./Post/Post";
 import { MyPostsPropsType } from "./MyPostsContainer";
 
-export const MyPosts = (props: MyPostsPropsType) => {
+export const MyPosts = React.memo((props: MyPostsPropsType) => {
   const postsElements = props.posts.map((post) => (
     <Post
       key={post.id}
@@ -35,4 +35,4 @@ export const MyPosts = (props: MyPostsPropsType) => {
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );
-};
+});

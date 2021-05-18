@@ -3,7 +3,7 @@ import classes from "./ProfileInfo.module.css";
 import { ProfilePropsType as ProfileInfoPropsType } from "../Profile";
 import { Preloader } from "../../common/Preloader/Preloader";
 
-export const ProfileInfo = (props: ProfileInfoPropsType) => {
+export const ProfileInfo = React.memo((props: ProfileInfoPropsType) => {
   // checking if userProfile is not an empty object (with properties === undefined)
   if (!props.userProfile.userId) {
     return <Preloader />;
@@ -22,4 +22,4 @@ export const ProfileInfo = (props: ProfileInfoPropsType) => {
         </div>
       </div>
     );
-};
+});

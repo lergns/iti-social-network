@@ -7,11 +7,11 @@ export type ProfilePropsType = {
   userProfile: UserProfileType;
 };
 
-export const Profile = (props: ProfilePropsType) => {
+export const Profile = React.memo((props: ProfilePropsType) => {
   return (
     <div>
       <ProfileInfo userProfile={props.userProfile} />
       <MyPostsContainer />
     </div>
   );
-};
+});

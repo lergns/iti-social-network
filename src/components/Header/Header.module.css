@@ -6,3 +6,9 @@
 .header img {
   width: 20px;
 }
+
+.loginBlock {
+  text-align: left;
+  margin-left: 150px;
+  font-weight: bold;
+}

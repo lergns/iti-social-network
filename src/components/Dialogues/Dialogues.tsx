@@ -4,7 +4,7 @@ import { DialogueItem } from "./DialogueItem/DialogueItem";
 import { Message } from "./Message/Message";
 import { DialoguesPropsType } from "./DialoguesContainer";
 
-export const Dialogues = (props: DialoguesPropsType) => {
+export const Dialogues = React.memo((props: DialoguesPropsType) => {
   const dialogueElements = props.dialogues.map((dialogue) => (
     <DialogueItem
       key={dialogue.id}
@@ -48,4 +48,4 @@ export const Dialogues = (props: DialoguesPropsType) => {
       </div>
     </div>
   );
-};
+});

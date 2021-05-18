@@ -16,8 +16,17 @@ type UsersReducerActionTypes =
   | ReturnType<typeof setUsers>
   | ReturnType<typeof setCurrentPage>
   | ReturnType<typeof setTotalUsersCount>
-  | ReturnType<typeof setIsFetching>;
+  | ReturnType<typeof setIsFetching>
+  | ReturnType<typeof setFollowingProgress>;
 // TYPES
+
+const FOLLOW = "FOLLOW";
+const UNFOLLOW = "UNFOLLOW";
+const SET_USERS = "SET-USERS";
+const SET_CURRENT_PAGE = "SET-CURRENT-PAGE";
+const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT";
+const SET_IS_FETCHING = "SET-IS-FETCHING";
+const SET_FOLLOWING_PROGRESS = "SET-FOLLOWING-PROGRESS";
 
 export const follow = (userID: number) =>
   ({
@@ -49,61 +58,24 @@ export const setIsFetching = (newIsFetching: boolean) =>
     type: SET_IS_FETCHING,
     newIsFetching,
   } as const);
-
-const FOLLOW = "FOLLOW";
-const UNFOLLOW = "UNFOLLOW";
-const SET_USERS = "SET-USERS";
-const SET_CURRENT_PAGE = "SET-CURRENT-PAGE";
-const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT";
-const SET_IS_FETCHING = "TOGGLE-IS-FETCHING";
+export const setFollowingProgress = (
+  userID: number,
+  followingInProgress: boolean
+) =>
+  ({
+    type: SET_FOLLOWING_PROGRESS,
+    userID,
+    followingInProgress,
+  } as const);
+// ACs
 
 const usersInitialState = {
-  users: [
-    /*{
-      id: 1,
-      name: "Alex",
-      status: "I love Stacy!",
-      followed: false,
-      photos: {
-        large: "",
-        small: "",
-      },
-    },
-    {
-      id: 2,
-      name: "Stacy",
-      status: "I love Gracy and Chill!",
-      followed: true,
-      photos: {
-        large: "",
-        small: "",
-      },
-    },
-    {
-      id: 3,
-      name: "Gracy",
-      status: "zzZz",
-      followed: true,
-      photos: {
-        large: "",
-        small: "",
-      },
-    },
-    {
-      id: 4,
-      name: "Chill",
-      status: "Woof!",
-      followed: false,
-      photos: {
-        large: "",
-        small: "",
-      },
-    },*/
-  ] as Array<UserType>,
+  users: [] as Array<UserType>,
   pageSize: 100,
   totalUsersCount: 0,
   currentPage: 1,
   isFetching: false,
+  followingInProgress: [] as Array<number>,
 };
 
 export const usersReducer = (
@@ -138,6 +110,14 @@ export const usersReducer = (
 
     case SET_IS_FETCHING:
       return { ...usersState, isFetching: action.newIsFetching };
+
+    case SET_FOLLOWING_PROGRESS:
+      return {
+        ...usersState,
+        followingInProgress: action.followingInProgress
+          ? [...usersState.followingInProgress, action.userID]
+          : usersState.followingInProgress.filter((id) => id !== action.userID),
+      };
 
     default:
       return usersState;
