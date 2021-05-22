@@ -1,17 +1,17 @@
 import React from "react";
 import { Profile } from "./Profile";
-import axios from "axios";
 import { connect } from "react-redux";
 import { RootStateType } from "../../redux/redux-store";
-import { setUserProfile, UserProfileType } from "../../redux/profileReducer";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { getUserProfile, UserProfileType } from "../../redux/profileReducer";
+import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
 // IMPORTS
 
 type MapStatePropsType = {
   userProfile: UserProfileType;
+  isAuth: boolean;
 };
 type MapDispatchPropsType = {
-  setUserProfile: (userProfile: UserProfileType) => void;
+  getUserProfile: (userID: number) => void;
 };
 type ProfileClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 type ProfilePathParamsType = {
@@ -21,25 +21,23 @@ type ProfileClassContainerURLPropsType = RouteComponentProps<ProfilePathParamsTy
   ProfileClassContainerPropsType;
 // TYPES
 
-// container component --> container component --> container component --> presentational component
+// ProfileContainer --> ProfileURLContainer --> ProfileClassContainer --> Profile
 class ProfileClassContainer extends React.Component<
   ProfileClassContainerURLPropsType,
   UserProfileType
 > {
   componentDidMount() {
-    let userID = this.props.match.params.userID;
+    let userID = Number(this.props.match.params.userID);
     if (!userID) {
-      userID = "2";
+      userID = 2;
     }
-    axios
-      .get(`https://social-network.samuraijs.com/api/1.0/profile/${userID}`)
-      .then((promise) => {
-        this.props.setUserProfile(promise.data);
-      });
+    this.props.getUserProfile(userID);
   }
 
   render = () => {
-    return <Profile {...this.props} userProfile={this.props.userProfile} />;
+    if (!this.props.isAuth) return <Redirect to={"/login"} />; // if user is not authorized, redirect to ".../login"
+
+    return <Profile userProfile={this.props.userProfile} />;
   };
 }
 
@@ -47,9 +45,9 @@ const ProfileURLContainer = withRouter(ProfileClassContainer);
 
 const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   userProfile: state.profilePage.userProfile,
+  isAuth: state.auth.isAuth,
 });
 
-// HOC connect() automatically creates MDTP object (whose properties are references to AC functions)
-export const ProfileContainer = connect(mapStateToProps, { setUserProfile })(
+export const ProfileContainer = connect(mapStateToProps, { getUserProfile })(
   ProfileURLContainer
 );

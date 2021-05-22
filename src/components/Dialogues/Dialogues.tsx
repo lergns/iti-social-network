@@ -3,6 +3,7 @@ import classes from "./Dialogues.module.css";
 import { DialogueItem } from "./DialogueItem/DialogueItem";
 import { Message } from "./Message/Message";
 import { DialoguesPropsType } from "./DialoguesContainer";
+import { Redirect } from "react-router-dom";
 
 export const Dialogues = React.memo((props: DialoguesPropsType) => {
   const dialogueElements = props.dialogues.map((dialogue) => (
@@ -27,6 +28,8 @@ export const Dialogues = React.memo((props: DialoguesPropsType) => {
   const onMessageSending = () => {
     props.sendMessage();
   };
+
+  if (!props.isAuth) return <Redirect to={"/login"} />;
 
   return (
     <div className={classes.dialoguesPage}>

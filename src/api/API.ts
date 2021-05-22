@@ -6,12 +6,27 @@ const axiosInstance = axios.create({
   },
   baseURL: "https://social-network.samuraijs.com/api/1.0/",
   withCredentials: true,
-}); // axios.create({REQUEST CONFIG}) accepts JSON config object as its input and returns axios instance ( with config set to {REQUEST CONFIG} )
+});
 
 export const usersAPI = {
   getUsers(currentPageNumber: number = 1, pageSize: number = 100) {
     return axiosInstance
       .get(`users?page=${currentPageNumber}&count=${pageSize}`)
       .then((promise) => promise.data);
-  }, // getUsersAPI() returns promise.data
+  },
+  follow(userID: number) {
+    return axiosInstance.post(`follow/${userID}`);
+  },
+  unfollow(userID: number) {
+    return axiosInstance.delete(`follow/${userID}`);
+  },
+  getProfile(userID: number) {
+    return axiosInstance.get(`profile/${userID}`);
+  },
+};
+
+export const authAPI = {
+  me() {
+    return axiosInstance.get(`auth/me`);
+  },
 };

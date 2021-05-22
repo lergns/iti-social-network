@@ -12,6 +12,9 @@ type DialoguesReducerActionTypes =
   | ReturnType<typeof sendMessage>;
 // TYPES
 
+const UPDATE_NEW_MESSAGE_TEXT = "UPDATE-NEW-MESSAGE-TEXT";
+const SEND_MESSAGE = "SEND-MESSAGE";
+
 export const updateNewMessageText = (inputMessageText: string) =>
   ({
     type: UPDATE_NEW_MESSAGE_TEXT,
@@ -21,9 +24,7 @@ export const sendMessage = () =>
   ({
     type: SEND_MESSAGE,
   } as const);
-
-const UPDATE_NEW_MESSAGE_TEXT = "UPDATE-NEW-MESSAGE-TEXT";
-const SEND_MESSAGE = "SEND-MESSAGE";
+// ACs
 
 const dialoguesInitialState = {
   dialogues: [

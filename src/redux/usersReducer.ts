@@ -1,3 +1,6 @@
+import { Dispatch } from "redux";
+import { usersAPI } from "../api/API";
+
 type PhotosType = {
   small: string;
   large: string;
@@ -11,8 +14,8 @@ export type UserType = {
 };
 type UsersInitialStateType = typeof usersInitialState;
 type UsersReducerActionTypes =
-  | ReturnType<typeof follow>
-  | ReturnType<typeof unfollow>
+  | ReturnType<typeof followSuccess>
+  | ReturnType<typeof unfollowSuccess>
   | ReturnType<typeof setUsers>
   | ReturnType<typeof setCurrentPage>
   | ReturnType<typeof setTotalUsersCount>
@@ -28,12 +31,12 @@ const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT";
 const SET_IS_FETCHING = "SET-IS-FETCHING";
 const SET_FOLLOWING_PROGRESS = "SET-FOLLOWING-PROGRESS";
 
-export const follow = (userID: number) =>
+export const followSuccess = (userID: number) =>
   ({
     type: FOLLOW,
     userID,
   } as const);
-export const unfollow = (userID: number) =>
+export const unfollowSuccess = (userID: number) =>
   ({
     type: UNFOLLOW,
     userID,
@@ -68,6 +71,36 @@ export const setFollowingProgress = (
     followingInProgress,
   } as const);
 // ACs
+
+export const getUsers = (currentPageNumber: number, pageSize: number) => (
+  dispatch: Dispatch
+) => {
+  dispatch(setIsFetching(true));
+  usersAPI.getUsers(currentPageNumber, pageSize).then((promiseData) => {
+    dispatch(setIsFetching(false));
+    dispatch(setUsers(promiseData.items));
+    dispatch(setTotalUsersCount(promiseData.totalCount));
+  });
+};
+export const follow = (userID: number) => (dispatch: Dispatch) => {
+  dispatch(setFollowingProgress(userID, true));
+  usersAPI.follow(userID).then((promise) => {
+    if (promise.data.resultCode === 0) {
+      dispatch(followSuccess(userID));
+    }
+    dispatch(setFollowingProgress(userID, false));
+  });
+};
+export const unfollow = (userID: number) => (dispatch: Dispatch) => {
+  dispatch(setFollowingProgress(userID, true));
+  usersAPI.unfollow(userID).then((promise) => {
+    if (promise.data.resultCode === 0) {
+      dispatch(unfollowSuccess(userID));
+    }
+    dispatch(setFollowingProgress(userID, false));
+  });
+};
+// TCs
 
 const usersInitialState = {
   users: [] as Array<UserType>,
