@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import { usersAPI } from "../api/API";
+import { profileAPI } from "../api/API";
 
 export type PostType = {
   id: number;
@@ -33,12 +33,14 @@ type ProfileInitialStateType = typeof profileInitialState;
 type ProfileReducerActionTypes =
   | ReturnType<typeof addPost>
   | ReturnType<typeof updateNewPostText>
+  | ReturnType<typeof setUserStatus>
   | ReturnType<typeof setUserProfile>;
 // TYPES
 
 const ADD_POST = "ADD-POST";
 const UPDATE_NEW_POST_TEXT = "UPDATE-NEW-POST-TEXT";
 const SET_USER_PROFILE = "SET-USER-PROFILE";
+const SET_USER_STATUS = "SET-USER-STATUS";
 
 export const addPost = () =>
   ({
@@ -54,11 +56,28 @@ export const setUserProfile = (userProfile: UserProfileType) =>
     type: SET_USER_PROFILE,
     userProfile,
   } as const);
+export const setUserStatus = (status: string) =>
+  ({
+    type: SET_USER_STATUS,
+    status,
+  } as const);
 // ACs
 
 export const getUserProfile = (userID: number) => (dispatch: Dispatch) => {
-  usersAPI.getProfile(userID).then((promise) => {
+  profileAPI.getProfile(userID).then((promise) => {
     dispatch(setUserProfile(promise.data));
+  });
+};
+export const getUserStatus = (userID: number) => (dispatch: Dispatch) => {
+  profileAPI.getStatus(userID).then((promise) => {
+    dispatch(setUserStatus(promise.data));
+  });
+};
+export const updateUserStatus = (status: string) => (dispatch: Dispatch) => {
+  profileAPI.updateStatus(status).then((promise) => {
+    if (promise.data.resultCode === 0) {
+      dispatch(setUserStatus(status));
+    }
   });
 };
 // TCs
@@ -67,6 +86,7 @@ const profileInitialState = {
   posts: [] as Array<PostType>,
   userProfile: {} as UserProfileType,
   newPostText: "",
+  status: "",
 };
 
 export const profileReducer = (
@@ -91,6 +111,9 @@ export const profileReducer = (
 
     case SET_USER_PROFILE:
       return { ...profileState, userProfile: action.userProfile };
+
+    case SET_USER_STATUS:
+      return { ...profileState, status: action.status };
 
     default:
       return profileState;

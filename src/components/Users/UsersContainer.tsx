@@ -10,6 +10,8 @@ import {
 import { Users } from "./Users";
 import React from "react";
 import { Preloader } from "../common/Preloader/Preloader";
+import { withAuthRedirect } from "../../hoc/withAuthRedirect";
+import { compose } from "redux";
 // IMPORTS
 
 type MapStatePropsType = {
@@ -71,9 +73,12 @@ const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   followingInProgress: state.usersPage.followingInProgress,
 });
 
-export const UsersContainer = connect(mapStateToProps, {
-  setCurrentPage,
-  follow,
-  unfollow,
-  getUsers,
-})(UsersClassContainer);
+export const UsersContainer = compose<React.ComponentType>(
+  connect(mapStateToProps, {
+    setCurrentPage,
+    follow,
+    unfollow,
+    getUsers,
+  }),
+  withAuthRedirect
+)(UsersClassContainer);
