@@ -5,13 +5,13 @@ import {
   unfollow,
   getUsers,
   setCurrentPage,
-  UserType,
 } from "../../redux/usersReducer";
 import { Users } from "./Users";
 import React from "react";
 import { Preloader } from "../common/Preloader/Preloader";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
+import { UserType } from "../../api/API";
 // IMPORTS
 
 type MapStatePropsType = {
@@ -74,11 +74,14 @@ const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
 });
 
 export const UsersContainer = compose<React.ComponentType>(
-  connect(mapStateToProps, {
-    setCurrentPage,
-    follow,
-    unfollow,
-    getUsers,
-  }),
+  connect<MapStatePropsType, MapDispatchPropsType, unknown, RootStateType>(
+    mapStateToProps,
+    {
+      setCurrentPage,
+      follow,
+      unfollow,
+      getUsers,
+    }
+  ),
   withAuthRedirect
 )(UsersClassContainer);

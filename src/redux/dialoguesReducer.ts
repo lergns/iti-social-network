@@ -7,22 +7,13 @@ export type MessageType = {
   messageText: string;
 };
 type DialoguesInitialStateType = typeof dialoguesInitialState;
-type DialoguesReducerActionTypes =
-  | ReturnType<typeof updateNewMessageText>
-  | ReturnType<typeof sendMessage>;
+export type DialoguesReducerActionTypes = ReturnType<typeof sendMessage>;
 // TYPES
 
-const UPDATE_NEW_MESSAGE_TEXT = "UPDATE-NEW-MESSAGE-TEXT";
-const SEND_MESSAGE = "SEND-MESSAGE";
-
-export const updateNewMessageText = (inputMessageText: string) =>
+export const sendMessage = (newMessageText: string) =>
   ({
-    type: UPDATE_NEW_MESSAGE_TEXT,
-    inputMessageText,
-  } as const);
-export const sendMessage = () =>
-  ({
-    type: SEND_MESSAGE,
+    type: "SEND_MESSAGE",
+    newMessageText,
   } as const);
 // ACs
 
@@ -42,7 +33,6 @@ const dialoguesInitialState = {
     { id: 4, messageText: "Let's go get some buzz" },
     { id: 5, messageText: "$5,000/month is not enough, man..." },
   ] as Array<MessageType>,
-  newMessageText: "",
 };
 
 export const dialoguesReducer = (
@@ -50,19 +40,15 @@ export const dialoguesReducer = (
   action: DialoguesReducerActionTypes
 ): DialoguesInitialStateType => {
   switch (action.type) {
-    case UPDATE_NEW_MESSAGE_TEXT:
-      return { ...dialoguesState, newMessageText: action.inputMessageText };
-
-    case SEND_MESSAGE: {
+    case "SEND_MESSAGE": {
       const updatedState = {
         ...dialoguesState,
         messages: [...dialoguesState.messages],
       };
       updatedState.messages.push({
-        id: 6,
-        messageText: updatedState.newMessageText,
+        id: updatedState.messages.length + 1,
+        messageText: action.newMessageText,
       });
-      updatedState.newMessageText = "";
       return updatedState;
     }
 

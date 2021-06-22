@@ -3,7 +3,6 @@ import {
   DialogueItemType,
   MessageType,
   sendMessage,
-  updateNewMessageText,
 } from "../../redux/dialoguesReducer";
 import { Dialogues } from "./Dialogues";
 import { connect } from "react-redux";
@@ -15,11 +14,9 @@ import { compose } from "redux";
 type MapStatePropsType = {
   messages: Array<MessageType>;
   dialogues: Array<DialogueItemType>;
-  newMessageText: string;
 };
 type MapDispatchPropsType = {
-  updateNewMessageText: (newMessageText: string) => void;
-  sendMessage: () => void;
+  sendMessage: (newMessageText: string) => void;
 };
 export type DialoguesPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
@@ -27,13 +24,12 @@ export type DialoguesPropsType = MapStatePropsType & MapDispatchPropsType;
 const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   messages: state.dialoguesPage.messages,
   dialogues: state.dialoguesPage.dialogues,
-  newMessageText: state.dialoguesPage.newMessageText,
 });
 
 export const DialoguesContainer = compose<React.ComponentType>(
-  connect(mapStateToProps, {
-    updateNewMessageText,
-    sendMessage,
-  }),
+  connect<MapStatePropsType, MapDispatchPropsType, unknown, RootStateType>(
+    mapStateToProps,
+    { sendMessage }
+  ),
   withAuthRedirect
 )(Dialogues);

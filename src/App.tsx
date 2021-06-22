@@ -6,7 +6,7 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { DialoguesContainer } from "./components/Dialogues/DialoguesContainer";
 import { UsersContainer } from "./components/Users/UsersContainer";
 import { ProfileContainer } from "./components/Profile/ProfileContainer";
-import { Login } from "./components/Login/Login";
+import { LoginContainer } from "./components/Login/LoginContainer";
 
 export function App() {
   return (
@@ -17,7 +17,7 @@ export function App() {
         <Route path={"/profile/:userID?"} render={() => <ProfileContainer />} />
         <Route path={"/dialogues"} render={() => <DialoguesContainer />} />
         <Route path={"/users"} render={() => <UsersContainer />} />
-        <Route path={"/login"} render={() => <Login />} />
+        <Route path={"/login"} render={() => <LoginContainer />} />
       </div>
     </div>
   );

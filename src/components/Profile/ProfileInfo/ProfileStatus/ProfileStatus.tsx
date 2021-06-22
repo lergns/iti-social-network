@@ -10,8 +10,11 @@ type ProfileStatusStateType = {
 };
 
 // React.Component<COMPONENT PROPS TYPE, COMPONENT STATE TYPE>
-export class ProfileStatus extends React.Component<ProfileStatusPropsType> {
-  state: ProfileStatusStateType = {
+export class ProfileStatus extends React.Component<
+  ProfileStatusPropsType,
+  ProfileStatusStateType
+> {
+  state = {
     editMode: false,
     status: this.props.status,
   }; // CLASS.state --> local state of class component

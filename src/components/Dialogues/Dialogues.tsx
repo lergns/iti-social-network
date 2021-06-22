@@ -1,8 +1,11 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import classes from "./Dialogues.module.css";
 import { DialogueItem } from "./DialogueItem/DialogueItem";
 import { Message } from "./Message/Message";
 import { DialoguesPropsType } from "./DialoguesContainer";
+import AddMessageForm, {
+  AddMessageFormDataType,
+} from "./AddMessageForm/AddMessageForm";
 
 export const Dialogues = React.memo((props: DialoguesPropsType) => {
   const dialogueElements = props.dialogues.map((dialogue) => (
@@ -20,12 +23,8 @@ export const Dialogues = React.memo((props: DialoguesPropsType) => {
     />
   ));
 
-  const onMessageChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    props.updateNewMessageText(event.currentTarget.value);
-  };
-
-  const onMessageSending = () => {
-    props.sendMessage();
+  const addNewMessage = (formData: AddMessageFormDataType) => {
+    props.sendMessage(formData.newMessageText);
   };
 
   return (
@@ -33,18 +32,7 @@ export const Dialogues = React.memo((props: DialoguesPropsType) => {
       <div className={classes.dialoguesList}>{dialogueElements}</div>
       <div className={classes.messagesList}>
         <div>{messageElements}</div>
-        <div>
-          <div>
-            <textarea
-              value={props.newMessageText}
-              onChange={onMessageChange}
-              placeholder={"Enter your message"}
-            />
-          </div>
-          <div>
-            <button onClick={onMessageSending}>Send</button>
-          </div>
-        </div>
+        <AddMessageForm onSubmit={addNewMessage} />
       </div>
     </div>
   );

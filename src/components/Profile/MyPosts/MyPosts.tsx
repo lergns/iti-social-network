@@ -1,7 +1,8 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import classes from "./MyPosts.module.css";
 import { Post } from "./Post/Post";
 import { MyPostsPropsType } from "./MyPostsContainer";
+import AddPostForm, { AddPostFormDataType } from "./AddPostForm/AddPostForm";
 
 export const MyPosts = React.memo((props: MyPostsPropsType) => {
   const postsElements = props.posts.map((post) => (
@@ -13,25 +14,14 @@ export const MyPosts = React.memo((props: MyPostsPropsType) => {
     />
   ));
 
-  const onPostAdding = () => {
-    props.addPost();
-  };
-
-  const onPostChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    props.updateNewPostText(event.currentTarget.value);
+  const onPostAdding = (formData: AddPostFormDataType) => {
+    props.addPost(formData.newPostText);
   };
 
   return (
     <div className={classes.postsBlock}>
       <h3>My posts</h3>
-      <div>
-        <div>
-          <textarea value={props.newPostText} onChange={onPostChange} />
-        </div>
-        <div>
-          <button onClick={onPostAdding}>Add post</button>
-        </div>
-      </div>
+      <AddPostForm onSubmit={onPostAdding} />
       <div className={classes.posts}>{postsElements}</div>
     </div>
   );

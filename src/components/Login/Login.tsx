@@ -1,45 +1,19 @@
 import React from "react";
-import { Field, InjectedFormProps, reduxForm } from "redux-form";
+import LoginForm, { LoginFormDataType } from "./LoginForm/LoginForm";
+import { LoginPropsType } from "./LoginContainer";
+import { Redirect } from "react-router-dom";
 
-type FormDataType = {
-  login: string;
-  password: string;
-  rememberMe: boolean;
-};
+export const Login = React.memo((props: LoginPropsType) => {
+  const onSubmit = (formData: LoginFormDataType) =>
+    props.login(formData.email, formData.password, formData.rememberMe);
+  // props.login !== loginTC , connect()() from LoginContainer passed eponymous callback via props, which dispatches loginTC inside of itself !
 
-const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props) => {
-  return (
-    <form onSubmit={props.handleSubmit}>
+  if (props.isAuth) return <Redirect to={"/profile"} />;
+  else
+    return (
       <div>
-        <Field component={"input"} name={"login"} placeholder={"Login"} />
+        <h1>Log in</h1>
+        <LoginForm onSubmit={onSubmit} />
       </div>
-      <div>
-        <Field component={"input"} name={"password"} placeholder={"Password"} />
-      </div>
-      <div>
-        <Field component={"input"} name={"rememberMe"} type={"checkbox"} />
-        Remember me
-      </div>
-      <div>
-        <button>Log in</button>
-        {/* default behaviour of <button /> inside of <form /> === submitting form --> page reload */}
-      </div>
-    </form>
-  );
-};
-
-// reduxForm()() === HOC: 1) prevents default form behaviour; 2) collects data from form fields and packs it into object; 3) passes handleSubmit via props into child component; 4) calls callback on form submit
-const LoginReduxForm = reduxForm<FormDataType>({ form: "login" })(LoginForm);
-
-export const Login = () => {
-  const onSubmit = (formData: FormDataType) => {
-    console.log(formData);
-  };
-
-  return (
-    <div>
-      <h1>Log in</h1>
-      <LoginReduxForm onSubmit={onSubmit} />
-    </div>
-  );
-};
+    );
+});

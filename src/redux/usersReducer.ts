@@ -1,19 +1,8 @@
-import { Dispatch } from "redux";
-import { usersAPI } from "../api/API";
+import { ResultCode, usersAPI, UserType } from "../api/API";
+import { AppThunkType } from "./redux-store";
 
-type PhotosType = {
-  small: string;
-  large: string;
-};
-export type UserType = {
-  id: number;
-  name: string;
-  status: string;
-  followed: boolean;
-  photos: PhotosType;
-};
 type UsersInitialStateType = typeof usersInitialState;
-type UsersReducerActionTypes =
+export type UsersReducerActionTypes =
   | ReturnType<typeof followSuccess>
   | ReturnType<typeof unfollowSuccess>
   | ReturnType<typeof setUsers>
@@ -23,42 +12,34 @@ type UsersReducerActionTypes =
   | ReturnType<typeof setFollowingProgress>;
 // TYPES
 
-const FOLLOW = "FOLLOW";
-const UNFOLLOW = "UNFOLLOW";
-const SET_USERS = "SET-USERS";
-const SET_CURRENT_PAGE = "SET-CURRENT-PAGE";
-const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT";
-const SET_IS_FETCHING = "SET-IS-FETCHING";
-const SET_FOLLOWING_PROGRESS = "SET-FOLLOWING-PROGRESS";
-
 export const followSuccess = (userID: number) =>
   ({
-    type: FOLLOW,
+    type: "FOLLOW",
     userID,
   } as const);
 export const unfollowSuccess = (userID: number) =>
   ({
-    type: UNFOLLOW,
+    type: "UNFOLLOW",
     userID,
   } as const);
 export const setUsers = (users: Array<UserType>) =>
   ({
-    type: SET_USERS,
+    type: "SET_USERS",
     users,
   } as const);
 export const setCurrentPage = (currentPage: number) =>
   ({
-    type: SET_CURRENT_PAGE,
+    type: "SET_CURRENT_PAGE",
     currentPage,
   } as const);
 export const setTotalUsersCount = (totalUsersCount: number) =>
   ({
-    type: SET_TOTAL_USERS_COUNT,
+    type: "SET_TOTAL_USERS_COUNT",
     totalUsersCount,
   } as const);
 export const setIsFetching = (newIsFetching: boolean) =>
   ({
-    type: SET_IS_FETCHING,
+    type: "SET_IS_FETCHING",
     newIsFetching,
   } as const);
 export const setFollowingProgress = (
@@ -66,35 +47,38 @@ export const setFollowingProgress = (
   followingInProgress: boolean
 ) =>
   ({
-    type: SET_FOLLOWING_PROGRESS,
+    type: "SET_FOLLOWING_PROGRESS",
     userID,
     followingInProgress,
   } as const);
 // ACs
 
-export const getUsers = (currentPageNumber: number, pageSize: number) => (
-  dispatch: Dispatch
-) => {
+export const getUsers = (
+  currentPageNumber: number,
+  pageSize: number
+): AppThunkType => (dispatch) => {
   dispatch(setIsFetching(true));
-  usersAPI.getUsers(currentPageNumber, pageSize).then((promiseData) => {
-    dispatch(setIsFetching(false));
-    dispatch(setUsers(promiseData.items));
-    dispatch(setTotalUsersCount(promiseData.totalCount));
+  usersAPI.getUsers(currentPageNumber, pageSize).then((res) => {
+    if (!res.error) {
+      dispatch(setIsFetching(false));
+      dispatch(setUsers(res.items));
+      dispatch(setTotalUsersCount(res.totalCount));
+    }
   });
 };
-export const follow = (userID: number) => (dispatch: Dispatch) => {
+export const follow = (userID: number): AppThunkType => (dispatch) => {
   dispatch(setFollowingProgress(userID, true));
-  usersAPI.follow(userID).then((promise) => {
-    if (promise.data.resultCode === 0) {
+  usersAPI.follow(userID).then((res) => {
+    if (res.resultCode === ResultCode.Success) {
       dispatch(followSuccess(userID));
     }
     dispatch(setFollowingProgress(userID, false));
   });
 };
-export const unfollow = (userID: number) => (dispatch: Dispatch) => {
+export const unfollow = (userID: number): AppThunkType => (dispatch) => {
   dispatch(setFollowingProgress(userID, true));
-  usersAPI.unfollow(userID).then((promise) => {
-    if (promise.data.resultCode === 0) {
+  usersAPI.unfollow(userID).then((res) => {
+    if (res.resultCode === ResultCode.Success) {
       dispatch(unfollowSuccess(userID));
     }
     dispatch(setFollowingProgress(userID, false));
@@ -116,7 +100,7 @@ export const usersReducer = (
   action: UsersReducerActionTypes
 ): UsersInitialStateType => {
   switch (action.type) {
-    case FOLLOW:
+    case "FOLLOW":
       return {
         ...usersState,
         users: usersState.users.map((user) =>
@@ -124,7 +108,7 @@ export const usersReducer = (
         ), // also copying USER to be changed
       };
 
-    case UNFOLLOW:
+    case "UNFOLLOW":
       return {
         ...usersState,
         users: usersState.users.map((user) =>
@@ -132,19 +116,19 @@ export const usersReducer = (
         ),
       };
 
-    case SET_USERS:
+    case "SET_USERS":
       return { ...usersState, users: action.users };
 
-    case SET_CURRENT_PAGE:
+    case "SET_CURRENT_PAGE":
       return { ...usersState, currentPage: action.currentPage };
 
-    case SET_TOTAL_USERS_COUNT:
+    case "SET_TOTAL_USERS_COUNT":
       return { ...usersState, totalUsersCount: action.totalUsersCount };
 
-    case SET_IS_FETCHING:
+    case "SET_IS_FETCHING":
       return { ...usersState, isFetching: action.newIsFetching };
 
-    case SET_FOLLOWING_PROGRESS:
+    case "SET_FOLLOWING_PROGRESS":
       return {
         ...usersState,
         followingInProgress: action.followingInProgress
