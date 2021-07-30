@@ -1,5 +1,5 @@
 import { ResultCode, usersAPI, UserType } from "../api/API";
-import { AppThunkType } from "./redux-store";
+import { RootThunkType } from "./redux-store";
 
 type UsersInitialStateType = typeof usersInitialState;
 export type UsersReducerActionTypes =
@@ -53,10 +53,10 @@ export const setFollowingProgress = (
   } as const);
 // ACs
 
-export const getUsers = (
+export const fetchUsers = (
   currentPageNumber: number,
   pageSize: number
-): AppThunkType => (dispatch) => {
+): RootThunkType => (dispatch) => {
   dispatch(setIsFetching(true));
   usersAPI.getUsers(currentPageNumber, pageSize).then((res) => {
     if (!res.error) {
@@ -66,7 +66,7 @@ export const getUsers = (
     }
   });
 };
-export const follow = (userID: number): AppThunkType => (dispatch) => {
+export const follow = (userID: number): RootThunkType => (dispatch) => {
   dispatch(setFollowingProgress(userID, true));
   usersAPI.follow(userID).then((res) => {
     if (res.resultCode === ResultCode.Success) {
@@ -75,7 +75,7 @@ export const follow = (userID: number): AppThunkType => (dispatch) => {
     dispatch(setFollowingProgress(userID, false));
   });
 };
-export const unfollow = (userID: number): AppThunkType => (dispatch) => {
+export const unfollow = (userID: number): RootThunkType => (dispatch) => {
   dispatch(setFollowingProgress(userID, true));
   usersAPI.unfollow(userID).then((res) => {
     if (res.resultCode === ResultCode.Success) {

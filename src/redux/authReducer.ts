@@ -1,5 +1,5 @@
 import { authAPI, ResultCode } from "../api/API";
-import { AppThunkType } from "./redux-store";
+import { RootThunkType } from "./redux-store";
 import { stopSubmit } from "redux-form";
 
 type AuthInitialStateType = typeof authInitialState;
@@ -23,8 +23,11 @@ export const setAuthUserData = (
   } as const);
 // ACs
 
-export const getAuthUserData = (): AppThunkType => (dispatch) => {
-  authAPI.me().then((res) => {
+export const getAuthUserData = (): RootThunkType<Promise<void>> => (
+  dispatch
+) => {
+  return authAPI.me().then((res) => {
+    // explicitly returning promise from thunk ; RootThunkType<Promise<void>> !
     if (res.resultCode === ResultCode.Success) {
       dispatch(
         setAuthUserData(res.data.id, res.data.email, res.data.login, true)
@@ -36,7 +39,7 @@ export const login = (
   email: string,
   password: string,
   rememberMe?: boolean
-): AppThunkType => (dispatch) => {
+): RootThunkType => (dispatch) => {
   authAPI.login(email, password, rememberMe).then((res) => {
     if (res.resultCode === ResultCode.Success) {
       dispatch(getAuthUserData()); // dispatching thunk from another thunk
@@ -50,7 +53,7 @@ export const login = (
     }
   });
 };
-export const logout = (): AppThunkType => (dispatch) => {
+export const logout = (): RootThunkType => (dispatch) => {
   authAPI.logout().then((res) => {
     if (res.resultCode === ResultCode.Success) {
       dispatch(setAuthUserData(null, null, null, false));

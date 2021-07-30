@@ -2,47 +2,42 @@ import { connect } from "react-redux";
 import { RootStateType } from "../../redux/redux-store";
 import {
   follow,
-  unfollow,
-  getUsers,
+  fetchUsers,
   setCurrentPage,
+  unfollow,
 } from "../../redux/usersReducer";
 import { Users } from "./Users";
 import React from "react";
 import { Preloader } from "../common/Preloader/Preloader";
-import { withAuthRedirect } from "../../hoc/withAuthRedirect";
-import { compose } from "redux";
-import { UserType } from "../../api/API";
+import {
+  selectCurrentPage,
+  selectFollowingInProgress,
+  selectIsFetching,
+  selectPageSize,
+  selectTotalUsersCount,
+  selectUsers,
+} from "../../redux/usersSelectors";
 // IMPORTS
 
-type MapStatePropsType = {
-  users: Array<UserType>;
-  pageSize: number;
-  totalUsersCount: number;
-  currentPage: number;
-  isFetching: boolean;
-  followingInProgress: Array<number>;
-};
+type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
   setCurrentPage: (currentPage: number) => void;
   follow: (userID: number) => void;
   unfollow: (userID: number) => void;
-  getUsers: (currentPageNumber: number, pageSize: number) => void;
+  fetchUsers: (currentPageNumber: number, pageSize: number) => void;
 };
 type UsersClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
 
 // UsersContainer --> UsersClassContainer --> Users
-class UsersClassContainer extends React.Component<
-  UsersClassContainerPropsType,
-  Array<UserType>
-> {
+class UsersClassContainer extends React.Component<UsersClassContainerPropsType> {
   componentDidMount() {
-    this.props.getUsers(this.props.currentPage, this.props.pageSize);
+    this.props.fetchUsers(this.props.currentPage, this.props.pageSize);
   }
 
   onPageChange = (pageNumber: number) => {
     this.props.setCurrentPage(pageNumber);
-    this.props.getUsers(pageNumber, this.props.pageSize);
+    this.props.fetchUsers(pageNumber, this.props.pageSize);
   };
 
   render = () => {
@@ -64,24 +59,32 @@ class UsersClassContainer extends React.Component<
   };
 }
 
-const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
+/*const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   users: state.usersPage.users,
   pageSize: state.usersPage.pageSize,
   totalUsersCount: state.usersPage.totalUsersCount,
   currentPage: state.usersPage.currentPage,
   isFetching: state.usersPage.isFetching,
   followingInProgress: state.usersPage.followingInProgress,
+});*/
+
+const mapStateToProps = (state: RootStateType) => ({
+  users: selectUsers(state),
+  pageSize: selectPageSize(state),
+  totalUsersCount: selectTotalUsersCount(state),
+  currentPage: selectCurrentPage(state),
+  isFetching: selectIsFetching(state),
+  followingInProgress: selectFollowingInProgress(state),
 });
 
-export const UsersContainer = compose<React.ComponentType>(
-  connect<MapStatePropsType, MapDispatchPropsType, unknown, RootStateType>(
-    mapStateToProps,
-    {
-      setCurrentPage,
-      follow,
-      unfollow,
-      getUsers,
-    }
-  ),
-  withAuthRedirect
-)(UsersClassContainer);
+export const UsersContainer = connect<
+  MapStatePropsType,
+  MapDispatchPropsType,
+  unknown,
+  RootStateType
+>(mapStateToProps, {
+  setCurrentPage,
+  follow,
+  unfollow,
+  fetchUsers,
+})(UsersClassContainer);

@@ -1,11 +1,5 @@
 import axios from "axios";
 
-export enum ResultCode {
-  Success = 0,
-  Error = 1,
-  Captcha = 10,
-}
-
 export type UserProfileType = {
   aboutMe: string;
   userId: number;
@@ -51,6 +45,13 @@ type GetUsersResponseType = {
   totalCount: number;
   error: string | null;
 };
+
+export enum ResultCode {
+  Success = 0,
+  Error = 1,
+  Captcha = 10,
+}
+
 // TYPES
 
 const axiosInstance = axios.create({

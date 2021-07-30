@@ -10,36 +10,33 @@ import {
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
-import { UserProfileType } from "../../api/API";
+import { selectStatus, selectUserProfile } from "../../redux/profileSelectors";
+import { selectAuthUserID, selectIsAuth } from "../../redux/authSelectors";
 // IMPORTS
 
-type MapStatePropsType = {
-  userProfile: UserProfileType;
-  status: string;
-  authUserID: number | null;
-  isAuth: boolean;
-};
+type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
   getUserProfile: (userID: number) => void;
   getUserStatus: (userID: number) => void;
   updateUserStatus: (status: string) => void;
 };
-type ProfileClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 type ProfilePathParamsType = {
   userID: string;
 };
-type ProfileClassContainerWithURLPropsType = RouteComponentProps<ProfilePathParamsType> &
-  ProfileClassContainerPropsType;
+type ProfileClassContainerPropsType = RouteComponentProps<ProfilePathParamsType> &
+  MapStatePropsType &
+  MapDispatchPropsType;
 // TYPES
 
 // ProfileContainer --> --> ProfileClassContainer --> Profile
-class ProfileClassContainer extends React.Component<
-  ProfileClassContainerWithURLPropsType,
-  UserProfileType
-> {
+class ProfileClassContainer extends React.Component<ProfileClassContainerPropsType> {
   componentDidMount() {
     let userID = Number(this.props.match.params.userID);
-    if (!userID && this.props.authUserID) userID = this.props.authUserID;
+    if (!userID && this.props.authUserID) {
+      userID = this.props.authUserID;
+    } else if (!userID && !this.props.authUserID) {
+      this.props.history.push("/login"); // program redirect - not via JSX !
+    }
     this.props.getUserProfile(userID);
     this.props.getUserStatus(userID);
   }
@@ -55,11 +52,11 @@ class ProfileClassContainer extends React.Component<
   };
 }
 
-const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
-  userProfile: state.profilePage.userProfile,
-  status: state.profilePage.status,
-  authUserID: state.auth.id,
-  isAuth: state.auth.isAuth,
+const mapStateToProps = (state: RootStateType) => ({
+  userProfile: selectUserProfile(state),
+  status: selectStatus(state),
+  authUserID: selectAuthUserID(state),
+  isAuth: selectIsAuth(state),
 });
 
 export const ProfileContainer = compose<React.ComponentType>(

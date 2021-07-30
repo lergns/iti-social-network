@@ -1,29 +1,26 @@
 import React from "react";
-import {
-  DialogueItemType,
-  MessageType,
-  sendMessage,
-} from "../../redux/dialoguesReducer";
+import { sendMessage } from "../../redux/dialoguesReducer";
 import { Dialogues } from "./Dialogues";
 import { connect } from "react-redux";
 import { RootStateType } from "../../redux/redux-store";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
+import {
+  selectDialogues,
+  selectMessages,
+} from "../../redux/dialoguesSelectors";
 // IMPORTS
 
-type MapStatePropsType = {
-  messages: Array<MessageType>;
-  dialogues: Array<DialogueItemType>;
-};
+type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
   sendMessage: (newMessageText: string) => void;
 };
 export type DialoguesPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
 
-const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
-  messages: state.dialoguesPage.messages,
-  dialogues: state.dialoguesPage.dialogues,
+const mapStateToProps = (state: RootStateType) => ({
+  messages: selectMessages(state),
+  dialogues: selectDialogues(state),
 });
 
 export const DialoguesContainer = compose<React.ComponentType>(

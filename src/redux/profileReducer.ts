@@ -1,5 +1,5 @@
 import { profileAPI, ResultCode, UserProfileType } from "../api/API";
-import { AppThunkType } from "./redux-store";
+import { RootThunkType } from "./redux-store";
 
 export type PostType = {
   id: number;
@@ -30,13 +30,13 @@ export const setUserStatus = (status: string) =>
   } as const);
 // ACs
 
-export const getUserProfile = (userID: number): AppThunkType => (dispatch) => {
+export const getUserProfile = (userID: number): RootThunkType => (dispatch) => {
   profileAPI.getProfile(userID).then((res) => dispatch(setUserProfile(res)));
 };
-export const getUserStatus = (userID: number): AppThunkType => (dispatch) => {
+export const getUserStatus = (userID: number): RootThunkType => (dispatch) => {
   profileAPI.getStatus(userID).then((res) => dispatch(setUserStatus(res)));
 };
-export const updateUserStatus = (status: string): AppThunkType => (
+export const updateUserStatus = (status: string): RootThunkType => (
   dispatch
 ) => {
   profileAPI.updateStatus(status).then((res) => {
