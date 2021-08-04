@@ -1,66 +1,46 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 
 type ProfileStatusPropsType = {
   status: string;
   updateUserStatus: (status: string) => void;
 };
-type ProfileStatusStateType = {
-  editMode: boolean;
-  status: string;
-};
 
-// React.Component<COMPONENT PROPS TYPE, COMPONENT STATE TYPE>
-export class ProfileStatus extends React.Component<
-  ProfileStatusPropsType,
-  ProfileStatusStateType
-> {
-  state = {
-    editMode: false,
-    status: this.props.status,
-  }; // CLASS.state --> local state of class component
+export const ProfileStatus = React.memo((props: ProfileStatusPropsType) => {
+  useEffect(() => {
+    setStatus(props.status);
+  }, [props.status]); // async. response (status) received --> props.status changed --> useEffect is called
+  // useEffect() is always executed asynchronously after component returns JSX (after mounting/updating in DOM) !
 
-  componentDidUpdate(
-    prevProps: ProfileStatusPropsType,
-    prevState: ProfileStatusStateType
-  ) {
-    if (prevProps.status !== this.props.status) {
-      this.setState({ status: this.props.status });
-    }
-  }
+  const [editMode, setEditMode] = useState(false);
+  const [status, setStatus] = useState(props.status);
+  // useState()'s setSTATE() invokes component re-rendering
 
-  activateEditMode = () => {
-    this.setState({ editMode: true }); // setState() - React.Component method - accepts object with state properties to be changed, as its input parameter ; setState() is executed asynchronously !
+  const activateEditMode = () => setEditMode(true);
+  const deactivateEditMode = () => {
+    setEditMode(false);
+    props.updateUserStatus(status);
   };
+  const onStatusChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setStatus(event.currentTarget.value);
 
-  deactivateEditMode = () => {
-    this.setState({ editMode: false });
-    this.props.updateUserStatus(this.state.status);
-  };
-
-  onStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ status: event.currentTarget.value });
-  };
-
-  render() {
-    return (
-      <div>
-        {this.state.editMode ? (
-          <div>
-            <input
-              onChange={this.onStatusChange}
-              onBlur={this.deactivateEditMode}
-              value={this.state.status}
-              autoFocus
-            />
-          </div>
-        ) : (
-          <div>
-            <span onDoubleClick={this.activateEditMode}>
-              {this.props.status || "No status"}
-            </span>
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {editMode ? (
+        <div>
+          <input
+            onChange={onStatusChange}
+            onBlur={deactivateEditMode}
+            value={status}
+            autoFocus
+          />
+        </div>
+      ) : (
+        <div>
+          <span onDoubleClick={activateEditMode}>
+            {props.status || "No status"}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+});
