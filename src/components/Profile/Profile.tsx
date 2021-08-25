@@ -9,15 +9,17 @@ type ProfilePropsType = {
   updateUserStatus: (status: string) => void;
 };
 
-export const Profile = React.memo((props: ProfilePropsType) => {
-  return (
-    <div>
-      <ProfileInfo
-        userProfile={props.userProfile}
-        status={props.status}
-        updateUserStatus={props.updateUserStatus}
-      />
-      <MyPostsContainer />
-    </div>
-  );
-});
+export const Profile = React.memo(
+  ({ userProfile, updateUserStatus, status }: ProfilePropsType) => {
+    return (
+      <div>
+        <ProfileInfo
+          userProfile={userProfile}
+          status={status}
+          updateUserStatus={updateUserStatus}
+        />
+        <MyPostsContainer />
+      </div>
+    );
+  }
+);

@@ -1,4 +1,4 @@
-import { RootStateType } from "./redux-store";
+import { RootStateType } from "../redux-store";
 
 export const selectAuthUserID = (state: RootStateType): number | null =>
   state.auth.id;

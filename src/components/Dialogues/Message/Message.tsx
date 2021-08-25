@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./Message.module.css";
-import { MessageType as MessagePropsType } from "../../../redux/dialoguesReducer";
+import { MessageType as MessagePropsType } from "../../../redux/dialogues/dialoguesReducer";
 
-export const Message = React.memo((props: MessagePropsType) => {
-  return <div className={classes.message}>{props.messageText}</div>;
+export const Message = React.memo(({ messageText }: MessagePropsType) => {
+  return <div className={classes.message}>{messageText}</div>;
 });

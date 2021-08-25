@@ -1,13 +1,14 @@
-import { addPost, PostType } from "../../../redux/profileReducer";
+import { addPost, deletePost } from "../../../redux/profile/profileReducer";
 import { MyPosts } from "./MyPosts";
 import { connect } from "react-redux";
 import { RootStateType } from "../../../redux/redux-store";
-import { selectPosts } from "../../../redux/profileSelectors";
+import { selectPosts } from "../../../redux/profile/profileSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
   addPost: (newPostText: string) => void;
+  deletePost: (postID: number) => void;
 };
 export type MyPostsPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
@@ -21,4 +22,4 @@ export const MyPostsContainer = connect<
   MapDispatchPropsType,
   unknown,
   RootStateType
->(mapStateToProps, { addPost })(MyPosts);
+>(mapStateToProps, { addPost, deletePost })(MyPosts);

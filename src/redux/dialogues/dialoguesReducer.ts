@@ -10,13 +10,6 @@ type DialoguesInitialStateType = typeof dialoguesInitialState;
 export type DialoguesReducerActionTypes = ReturnType<typeof sendMessage>;
 // TYPES
 
-export const sendMessage = (newMessageText: string) =>
-  ({
-    type: "SEND_MESSAGE",
-    newMessageText,
-  } as const);
-// ACs
-
 const dialoguesInitialState = {
   dialogues: [
     { id: 1, personName: "Stacy" },
@@ -24,23 +17,22 @@ const dialoguesInitialState = {
     { id: 3, personName: "Mike" },
     { id: 4, personName: "Sam" },
     { id: 5, personName: "Sanya" },
-    { id: 6, personName: "Ladies" },
   ] as Array<DialogueItemType>,
   messages: [
-    { id: 1, messageText: "Best man ever, top-class man!" },
-    { id: 2, messageText: "Feed." },
-    { id: 3, messageText: "I don't use public transport" },
-    { id: 4, messageText: "Let's go get some buzz" },
-    { id: 5, messageText: "$5,000/month is not enough, man..." },
+    { id: 1, messageText: "Hola!" },
+    { id: 2, messageText: "Meow" },
+    { id: 3, messageText: "What's up?" },
+    { id: 4, messageText: "Where have you been?" },
+    { id: 5, messageText: "See you soon!" },
   ] as Array<MessageType>,
 };
 
 export const dialoguesReducer = (
-  dialoguesState: DialoguesInitialStateType = dialoguesInitialState,
+  dialoguesState = dialoguesInitialState,
   action: DialoguesReducerActionTypes
 ): DialoguesInitialStateType => {
   switch (action.type) {
-    case "SEND_MESSAGE": {
+    case "dialogues/SEND_MESSAGE": {
       const updatedState = {
         ...dialoguesState,
         messages: [...dialoguesState.messages],
@@ -56,3 +48,11 @@ export const dialoguesReducer = (
       return dialoguesState;
   }
 };
+// REDUCER
+
+export const sendMessage = (newMessageText: string) =>
+  ({
+    type: "dialogues/SEND_MESSAGE",
+    newMessageText,
+  } as const);
+// ACs

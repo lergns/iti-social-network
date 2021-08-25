@@ -10,19 +10,21 @@ type ProfileInfoPropsType = {
   updateUserStatus: (status: string) => void;
 };
 
-export const ProfileInfo = React.memo((props: ProfileInfoPropsType) => {
-  if (!props.userProfile.userId) {
-    return <Preloader />;
-  } else
-    return (
-      <div>
-        <div className={classes.descriptionBlock}>
-          <img src={props.userProfile.photos.large} alt={"user avatar"} />
-          <ProfileStatus
-            status={props.status}
-            updateUserStatus={props.updateUserStatus}
-          />
+export const ProfileInfo = React.memo(
+  ({ userProfile, updateUserStatus, status }: ProfileInfoPropsType) => {
+    if (!userProfile.userId) {
+      return <Preloader />;
+    } else
+      return (
+        <div>
+          <div className={classes.descriptionBlock}>
+            <img src={userProfile.photos.large} alt={"User"} />
+            <ProfileStatus
+              status={status}
+              updateUserStatus={updateUserStatus}
+            />
+          </div>
         </div>
-      </div>
-    );
-});
+      );
+  }
+);

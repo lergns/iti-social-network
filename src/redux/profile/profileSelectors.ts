@@ -1,5 +1,5 @@
-import { RootStateType } from "./redux-store";
-import { UserProfileType } from "../api/API";
+import { RootStateType } from "../redux-store";
+import { UserProfileType } from "../../api/API";
 import { PostType } from "./profileReducer";
 
 export const selectUserProfile = (state: RootStateType): UserProfileType =>

@@ -10,9 +10,9 @@ import { LoginContainer } from "./components/Login/LoginContainer";
 import { connect } from "react-redux";
 import { RootStateType } from "./redux/redux-store";
 import { compose } from "redux";
-import { initializeApp } from "./redux/appReducer";
+import { initializeApp } from "./redux/app/appReducer";
 import { Preloader } from "./components/common/Preloader/Preloader";
-import { selectIsInitialized } from "./redux/appSelectors";
+import { selectIsInitialized } from "./redux/app/appSelectors";
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
@@ -20,7 +20,7 @@ type MapDispatchPropsType = {
 };
 type AppClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 
-class AppClassContainer extends React.Component<AppClassContainerPropsType> {
+class AppClassContainer extends React.PureComponent<AppClassContainerPropsType> {
   componentDidMount() {
     this.props.initializeApp();
   }

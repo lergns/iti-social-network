@@ -1,9 +1,9 @@
 import React from "react";
 import { Header } from "./Header";
 import { connect } from "react-redux";
-import { logout } from "../../redux/authReducer";
+import { logout } from "../../redux/auth/authReducer";
 import { RootStateType } from "../../redux/redux-store";
-import { selectIsAuth, selectLogin } from "../../redux/authSelectors";
+import { selectIsAuth, selectLogin } from "../../redux/auth/authSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
@@ -14,7 +14,7 @@ type HeaderClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
 
 // HeaderContainer --> HeaderClassContainer --> Header
-class HeaderClassContainer extends React.Component<HeaderClassContainerPropsType> {
+class HeaderClassContainer extends React.PureComponent<HeaderClassContainerPropsType> {
   render = () => {
     return <Header {...this.props} />;
   };

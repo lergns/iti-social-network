@@ -6,12 +6,15 @@ import {
   getUserProfile,
   getUserStatus,
   updateUserStatus,
-} from "../../redux/profileReducer";
+} from "../../redux/profile/profileReducer";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
 import { compose } from "redux";
-import { selectStatus, selectUserProfile } from "../../redux/profileSelectors";
-import { selectAuthUserID, selectIsAuth } from "../../redux/authSelectors";
+import {
+  selectStatus,
+  selectUserProfile,
+} from "../../redux/profile/profileSelectors";
+import { selectAuthUserID, selectIsAuth } from "../../redux/auth/authSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
@@ -29,7 +32,7 @@ type ProfileClassContainerPropsType = RouteComponentProps<ProfilePathParamsType>
 // TYPES
 
 // ProfileContainer --> --> ProfileClassContainer --> Profile
-class ProfileClassContainer extends React.Component<ProfileClassContainerPropsType> {
+class ProfileClassContainer extends React.PureComponent<ProfileClassContainerPropsType> {
   componentDidMount() {
     let userID = Number(this.props.match.params.userID);
     if (!userID && this.props.authUserID) {

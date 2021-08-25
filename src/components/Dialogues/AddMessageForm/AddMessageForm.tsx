@@ -12,9 +12,9 @@ export type AddMessageFormDataType = {
 
 const AddMessageForm: React.FC<
   InjectedFormProps<AddMessageFormDataType>
-> = React.memo((props) => {
+> = React.memo(({ handleSubmit }) => {
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <div>
         <Field
           component={Textarea}

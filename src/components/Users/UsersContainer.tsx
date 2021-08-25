@@ -5,7 +5,7 @@ import {
   fetchUsers,
   setCurrentPage,
   unfollow,
-} from "../../redux/usersReducer";
+} from "../../redux/users/usersReducer";
 import { Users } from "./Users";
 import React from "react";
 import { Preloader } from "../common/Preloader/Preloader";
@@ -16,7 +16,7 @@ import {
   selectPageSize,
   selectTotalUsersCount,
   selectUsers,
-} from "../../redux/usersSelectors";
+} from "../../redux/users/usersSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
@@ -30,7 +30,7 @@ type UsersClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 // TYPES
 
 // UsersContainer --> UsersClassContainer --> Users
-class UsersClassContainer extends React.Component<UsersClassContainerPropsType> {
+class UsersClassContainer extends React.PureComponent<UsersClassContainerPropsType> {
   componentDidMount() {
     this.props.fetchUsers(this.props.currentPage, this.props.pageSize);
   }

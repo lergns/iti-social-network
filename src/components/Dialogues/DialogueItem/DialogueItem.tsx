@@ -1,13 +1,14 @@
 import React from "react";
 import classes from "./DialogueItem.module.css";
 import { NavLink } from "react-router-dom";
-import { DialogueItemType as DialogueItemPropsType } from "../../../redux/dialoguesReducer";
+import { DialogueItemType as DialogueItemPropsType } from "../../../redux/dialogues/dialoguesReducer";
 
-export const DialogueItem = React.memo((props: DialogueItemPropsType) => {
-  const path = `/dialogues/${props.id}`;
-  return (
-    <div className={classes.dialogue}>
-      <NavLink to={path}>{props.personName}</NavLink>
-    </div>
-  );
-});
+export const DialogueItem = React.memo(
+  ({ personName, id }: DialogueItemPropsType) => {
+    return (
+      <div className={classes.dialogue}>
+        <NavLink to={`/dialogues/${id}`}>{personName}</NavLink>
+      </div>
+    );
+  }
+);

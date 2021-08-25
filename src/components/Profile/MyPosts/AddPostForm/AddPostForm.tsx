@@ -5,6 +5,7 @@ import {
 import React from "react";
 import { Field, InjectedFormProps, reduxForm } from "redux-form";
 import { Textarea } from "../../../common/FormControls/FormControls";
+import classes from "./AddPostForm.module.css";
 
 export type AddPostFormDataType = {
   newPostText: string;
@@ -12,9 +13,9 @@ export type AddPostFormDataType = {
 
 const AddPostForm: React.FC<
   InjectedFormProps<AddPostFormDataType>
-> = React.memo((props) => {
+> = React.memo(({ handleSubmit }) => {
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <div>
         <Field
           component={Textarea}
@@ -24,7 +25,7 @@ const AddPostForm: React.FC<
         />
       </div>
       <div>
-        <button>Add post</button>
+        <button className={classes.btn}>Add post</button>
       </div>
     </form>
   );

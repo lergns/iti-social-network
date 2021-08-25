@@ -1,5 +1,5 @@
 import React from "react";
-import { sendMessage } from "../../redux/dialoguesReducer";
+import { sendMessage } from "../../redux/dialogues/dialoguesReducer";
 import { Dialogues } from "./Dialogues";
 import { connect } from "react-redux";
 import { RootStateType } from "../../redux/redux-store";
@@ -8,7 +8,7 @@ import { compose } from "redux";
 import {
   selectDialogues,
   selectMessages,
-} from "../../redux/dialoguesSelectors";
+} from "../../redux/dialogues/dialoguesSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;

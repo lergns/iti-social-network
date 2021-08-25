@@ -1,5 +1,5 @@
-import { RootStateType } from "./redux-store";
-import { UserType } from "../api/API";
+import { RootStateType } from "../redux-store";
+import { UserType } from "../../api/API";
 
 export const selectUsers = (state: RootStateType): Array<UserType> =>
   state.usersPage.users;
