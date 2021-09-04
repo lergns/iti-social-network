@@ -23,10 +23,12 @@ const mapStateToProps = (state: RootStateType) => ({
   dialogues: selectDialogues(state),
 });
 
-export const DialoguesContainer = compose<React.ComponentType>(
+const DialoguesContainer = compose<React.ComponentType>(
   connect<MapStatePropsType, MapDispatchPropsType, unknown, RootStateType>(
     mapStateToProps,
     { sendMessage }
   ),
   withAuthRedirect
 )(Dialogues);
+
+export default DialoguesContainer;

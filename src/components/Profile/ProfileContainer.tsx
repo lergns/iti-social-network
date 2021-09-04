@@ -62,7 +62,7 @@ const mapStateToProps = (state: RootStateType) => ({
   isAuth: selectIsAuth(state),
 });
 
-export const ProfileContainer = compose<React.ComponentType>(
+const ProfileContainer = compose<React.ComponentType>(
   connect<MapStatePropsType, MapDispatchPropsType, unknown, RootStateType>(
     mapStateToProps,
     {
@@ -75,3 +75,5 @@ export const ProfileContainer = compose<React.ComponentType>(
   withAuthRedirect
 )(ProfileClassContainer);
 // the same as --> connect(mapStateToProps, { getUserProfile, getUserStatus, updateUserStatus, })(withRouter(withAuthRedirect(ProfileClassContainer)))
+
+export default ProfileContainer;

@@ -1,4 +1,4 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
+import { combineReducers, createStore, applyMiddleware, compose } from "redux";
 import {
   profileReducer,
   ProfileReducerActionTypes,
@@ -38,4 +38,13 @@ const rootReducer = combineReducers({
   form: formReducer,
 });
 
-export const store = createStore(rootReducer, applyMiddleware(thunk));
+// configuring Redux DevTools for this app
+// @ts-ignore
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunk))
+);
+
+// @ts-ignore
+window.__store__ = store;

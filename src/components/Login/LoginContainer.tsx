@@ -14,9 +14,11 @@ const mapStateToProps = (state: RootStateType) => ({
   isAuth: selectIsAuth(state),
 });
 
-export const LoginContainer = connect<
+const LoginContainer = connect<
   MapStatePropsType,
   MapDispatchPropsType,
   unknown,
   RootStateType
 >(mapStateToProps, { login })(Login);
+
+export default LoginContainer;

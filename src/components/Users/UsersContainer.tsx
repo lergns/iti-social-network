@@ -68,7 +68,7 @@ const mapStateToProps = (state: RootStateType) => ({
   followingInProgress: selectFollowingInProgress(state),
 });
 
-export const UsersContainer = connect<
+const UsersContainer = connect<
   MapStatePropsType,
   MapDispatchPropsType,
   unknown,
@@ -79,3 +79,5 @@ export const UsersContainer = connect<
   unfollow,
   fetchUsers,
 })(UsersClassContainer);
+
+export default UsersContainer;

@@ -1,7 +1,23 @@
 .selectedPage {
+  cursor: pointer;
   font-weight: bold;
+  margin: 5px;
+  padding: 5px;
+  border-bottom: 1px solid greenyellow;
 }
 
 .page {
   cursor: pointer;
+  margin: 5px;
+}
+
+.paginator {
+  margin-top: 3px;
+}
+
+.btn {
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 50%;
+  font-weight: bold;
 }
