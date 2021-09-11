@@ -3,9 +3,10 @@ import { Profile } from "./Profile";
 import { connect } from "react-redux";
 import { RootStateType } from "../../redux/redux-store";
 import {
+  getProfileStatus,
   getUserProfile,
-  getUserStatus,
-  updateUserStatus,
+  updateProfilePhoto,
+  updateProfileStatus,
 } from "../../redux/profile/profileReducer";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { withAuthRedirect } from "../../hoc/withAuthRedirect";
@@ -20,8 +21,9 @@ import { selectAuthUserID, selectIsAuth } from "../../redux/auth/authSelectors";
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
 type MapDispatchPropsType = {
   getUserProfile: (userID: number) => void;
-  getUserStatus: (userID: number) => void;
-  updateUserStatus: (status: string) => void;
+  getProfileStatus: (userID: number) => void;
+  updateProfileStatus: (status: string) => void;
+  updateProfilePhoto: (photo: File) => void;
 };
 type ProfilePathParamsType = {
   userID: string;
@@ -31,9 +33,9 @@ type ProfileClassContainerPropsType = RouteComponentProps<ProfilePathParamsType>
   MapDispatchPropsType;
 // TYPES
 
-// ProfileContainer --> --> ProfileClassContainer --> Profile
+// ProfileContainer --> ProfileClassContainer --> Profile
 class ProfileClassContainer extends React.PureComponent<ProfileClassContainerPropsType> {
-  componentDidMount() {
+  updateUserProfile() {
     let userID = Number(this.props.match.params.userID);
     if (!userID && this.props.authUserID) {
       userID = this.props.authUserID;
@@ -41,15 +43,27 @@ class ProfileClassContainer extends React.PureComponent<ProfileClassContainerPro
       this.props.history.push("/login"); // program redirect - not via JSX !
     }
     this.props.getUserProfile(userID);
-    this.props.getUserStatus(userID);
+    this.props.getProfileStatus(userID);
+  }
+
+  componentDidMount() {
+    this.updateUserProfile();
+  }
+
+  componentDidUpdate(prevProps: Readonly<ProfileClassContainerPropsType>) {
+    if (this.props.match.params.userID !== prevProps.match.params.userID) {
+      this.updateUserProfile();
+    } // executing componentDidUpdate()'s body inside of condition !
   }
 
   render = () => {
     return (
       <Profile
+        isProfileOwner={!this.props.match.params.userID}
         userProfile={this.props.userProfile}
         status={this.props.status}
-        updateUserStatus={this.props.updateUserStatus}
+        updateProfileStatus={this.props.updateProfileStatus}
+        updateProfilePhoto={this.props.updateProfilePhoto}
       />
     );
   };
@@ -67,13 +81,14 @@ const ProfileContainer = compose<React.ComponentType>(
     mapStateToProps,
     {
       getUserProfile,
-      getUserStatus,
-      updateUserStatus,
+      getProfileStatus,
+      updateProfileStatus,
+      updateProfilePhoto,
     }
   ),
   withRouter,
   withAuthRedirect
 )(ProfileClassContainer);
-// the same as --> connect(mapStateToProps, { getUserProfile, getUserStatus, updateUserStatus, })(withRouter(withAuthRedirect(ProfileClassContainer)))
+// the same as --> connect(mapStateToProps, { getUserProfile, getUserStatus, updateUserStatus, updateUserPhoto })(withRouter(withAuthRedirect(ProfileClassContainer)))
 
 export default ProfileContainer;

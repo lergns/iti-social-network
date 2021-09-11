@@ -6,3 +6,5 @@ export const selectIsAuth = (state: RootStateType): boolean =>
   state.auth.isAuth;
 export const selectLogin = (state: RootStateType): string | null =>
   state.auth.login;
+export const selectCaptchaURL = (state: RootStateType): null | string =>
+  state.auth.captchaURL;

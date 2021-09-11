@@ -39,7 +39,7 @@ export const dialoguesReducer = (
       };
       updatedState.messages.push({
         id: updatedState.messages.length + 1,
-        messageText: action.newMessageText,
+        messageText: action.payload.newMessageText,
       });
       return updatedState;
     }
@@ -53,6 +53,8 @@ export const dialoguesReducer = (
 export const sendMessage = (newMessageText: string) =>
   ({
     type: "dialogues/SEND_MESSAGE",
-    newMessageText,
+    payload: {
+      newMessageText,
+    },
   } as const);
 // ACs

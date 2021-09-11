@@ -6,7 +6,7 @@ export type UserProfileType = {
   lookingForAJob: boolean;
   lookingForAJobDescription: string;
   fullName: string;
-  contacts: UserContactsType;
+  contacts: ProfileContactsType;
   photos: PhotosType;
 };
 export type UserType = {
@@ -26,7 +26,7 @@ type GetMeDataResponseType = {
   email: string;
   login: string;
 };
-type UserContactsType = {
+export type ProfileContactsType = {
   github: string;
   vk: string;
   facebook: string;
@@ -36,7 +36,7 @@ type UserContactsType = {
   youtube: string;
   mainLink: string;
 };
-type PhotosType = {
+export type PhotosType = {
   small: string;
   large: string;
 };
@@ -98,6 +98,18 @@ export const profileAPI = {
       .put<ResponseType>(`profile/status`, { status })
       .then((res) => res.data);
   },
+  updatePhoto(image: File) {
+    const formData = new FormData();
+    formData.append("image", image); // creating formData object to send file to server
+
+    return axiosInstance
+      .put<ResponseType<{ photos: PhotosType }>>(`profile/photo`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }, // configuring specific headers for the file sent
+      })
+      .then((res) => res.data);
+  },
 };
 
 export const authAPI = {
@@ -106,18 +118,32 @@ export const authAPI = {
       .get<ResponseType<GetMeDataResponseType>>(`auth/me`)
       .then((res) => res.data);
   },
-  login(email: string, password: string, rememberMe?: boolean) {
+  login(
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+    captcha?: string
+  ) {
     return axiosInstance
       .post<ResponseType<{ userId?: number }>>(`/auth/login`, {
         email,
         password,
         rememberMe,
+        captcha,
       })
       .then((res) => res.data);
   },
   logout() {
     return axiosInstance
       .delete<ResponseType>(`/auth/login`)
+      .then((res) => res.data);
+  },
+};
+
+export const securityAPI = {
+  getCaptcha() {
+    return axiosInstance
+      .get<{ url: string }>(`security/get-captcha-url`)
       .then((res) => res.data);
   },
 };

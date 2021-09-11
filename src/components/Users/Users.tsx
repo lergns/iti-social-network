@@ -12,6 +12,7 @@ type UsersPropsType = {
   onPageChange: (page: number) => void;
   follow: (userID: number) => void;
   unfollow: (userID: number) => void;
+  isAuth: boolean;
 };
 
 export const Users = React.memo(
@@ -24,6 +25,7 @@ export const Users = React.memo(
     followingInProgress,
     follow,
     unfollow,
+    isAuth,
   }: UsersPropsType) => {
     return (
       <div>
@@ -41,6 +43,7 @@ export const Users = React.memo(
             followingInProgress={followingInProgress}
             follow={follow}
             unfollow={unfollow}
+            isAuth={isAuth}
           />
         ))}
       </div>

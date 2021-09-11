@@ -13,7 +13,7 @@ export const appReducer = (
 ): AppInitialStateType => {
   switch (action.type) {
     case "app/SET_INITIALIZED":
-      return { ...appState, isInitialized: true };
+      return { ...appState, ...action.payload };
 
     default:
       return appState;
@@ -21,17 +21,22 @@ export const appReducer = (
 };
 // REDUCER
 
-export const setInitialized = () => ({ type: "app/SET_INITIALIZED" } as const);
+export const setInitialized = (isInitialized: boolean) =>
+  ({
+    type: "app/SET_INITIALIZED",
+    payload: {
+      isInitialized,
+    },
+  } as const);
 // ACs
 
 export const initializeApp = (): RootThunkType => async (dispatch) => {
   try {
     // dispatch(getAuthUserData()) - returns promise
     await dispatch(getAuthUserData());
-    dispatch(setInitialized());
+    dispatch(setInitialized(true));
   } catch (e) {
-    console.log(e);
-    alert("An error has occurred. Please try again later.");
+    console.warn(e);
   }
 };
 // TCs

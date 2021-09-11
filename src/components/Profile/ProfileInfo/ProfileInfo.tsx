@@ -3,26 +3,41 @@ import classes from "./ProfileInfo.module.css";
 import { Preloader } from "../../common/Preloader/Preloader";
 import { UserProfileType } from "../../../api/API";
 import { ProfileStatus } from "./ProfileStatus/ProfileStatus";
+import { ProfileContacts } from "./ProfileContacts/ProfileContacts";
+import { ProfilePhoto } from "./ProfilePhoto/ProfilePhoto";
 
 type ProfileInfoPropsType = {
   userProfile: UserProfileType;
   status: string;
-  updateUserStatus: (status: string) => void;
+  updateProfileStatus: (status: string) => void;
+  isProfileOwner: boolean;
+  updateProfilePhoto: (photo: File) => void;
 };
 
 export const ProfileInfo = React.memo(
-  ({ userProfile, updateUserStatus, status }: ProfileInfoPropsType) => {
+  ({
+    userProfile,
+    updateProfileStatus,
+    status,
+    isProfileOwner,
+    updateProfilePhoto,
+  }: ProfileInfoPropsType) => {
     if (!userProfile.userId) {
       return <Preloader />;
     } else
       return (
         <div>
           <div className={classes.descriptionBlock}>
-            <img src={userProfile.photos.large} alt={"User"} />
+            <ProfilePhoto
+              updateProfilePhoto={updateProfilePhoto}
+              isProfileOwner={isProfileOwner}
+              profilePhoto={userProfile.photos.large}
+            />
             <ProfileStatus
               status={status}
-              updateUserStatus={updateUserStatus}
+              updateProfileStatus={updateProfileStatus}
             />
+            <ProfileContacts profileContacts={userProfile.contacts} />
           </div>
         </div>
       );

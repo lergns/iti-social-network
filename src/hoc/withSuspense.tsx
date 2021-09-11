@@ -1,8 +1,8 @@
-import React, { ComponentType, Suspense } from "react";
+import React, { ComponentProps, ComponentType, Suspense } from "react";
 import { Preloader } from "../components/common/Preloader/Preloader";
 
 export function withSuspense<T>(Component: ComponentType<T>) {
-  return (props: any) => {
+  return (props: ComponentProps<any>) => {
     return (
       <Suspense fallback={<Preloader />}>
         <Component {...(props as T)} />

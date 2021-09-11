@@ -6,17 +6,27 @@ import { UserProfileType } from "../../api/API";
 type ProfilePropsType = {
   userProfile: UserProfileType;
   status: string;
-  updateUserStatus: (status: string) => void;
+  updateProfileStatus: (status: string) => void;
+  isProfileOwner: boolean;
+  updateProfilePhoto: (photo: File) => void;
 };
 
 export const Profile = React.memo(
-  ({ userProfile, updateUserStatus, status }: ProfilePropsType) => {
+  ({
+    userProfile,
+    updateProfileStatus,
+    status,
+    isProfileOwner,
+    updateProfilePhoto,
+  }: ProfilePropsType) => {
     return (
       <div>
         <ProfileInfo
           userProfile={userProfile}
           status={status}
-          updateUserStatus={updateUserStatus}
+          updateProfileStatus={updateProfileStatus}
+          isProfileOwner={isProfileOwner}
+          updateProfilePhoto={updateProfilePhoto}
         />
         <MyPostsContainer />
       </div>

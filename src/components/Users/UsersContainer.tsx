@@ -17,6 +17,7 @@ import {
   selectTotalUsersCount,
   selectUsers,
 } from "../../redux/users/usersSelectors";
+import { selectIsAuth } from "../../redux/auth/authSelectors";
 // IMPORTS
 
 type MapStatePropsType = ReturnType<typeof mapStateToProps>;
@@ -53,6 +54,7 @@ class UsersClassContainer extends React.PureComponent<UsersClassContainerPropsTy
           followingInProgress={this.props.followingInProgress}
           follow={this.props.follow}
           unfollow={this.props.unfollow}
+          isAuth={this.props.isAuth}
         />
       </>
     );
@@ -66,6 +68,7 @@ const mapStateToProps = (state: RootStateType) => ({
   currentPage: selectCurrentPage(state),
   isFetching: selectIsFetching(state),
   followingInProgress: selectFollowingInProgress(state),
+  isAuth: selectIsAuth(state),
 });
 
 const UsersContainer = connect<

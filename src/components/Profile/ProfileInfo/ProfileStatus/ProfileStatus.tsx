@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 
 type ProfileStatusPropsType = {
   status: string;
-  updateUserStatus: (status: string) => void;
+  updateProfileStatus: (status: string) => void;
 };
 
 export const ProfileStatus = React.memo((props: ProfileStatusPropsType) => {
@@ -18,7 +18,7 @@ export const ProfileStatus = React.memo((props: ProfileStatusPropsType) => {
   const activateEditMode = () => setEditMode(true);
   const deactivateEditMode = () => {
     setEditMode(false);
-    props.updateUserStatus(status);
+    props.updateProfileStatus(status);
   };
   const onStatusChange = (event: ChangeEvent<HTMLInputElement>) =>
     setStatus(event.currentTarget.value);
@@ -36,6 +36,7 @@ export const ProfileStatus = React.memo((props: ProfileStatusPropsType) => {
         </div>
       ) : (
         <div>
+          <b>Status: </b>
           <span onDoubleClick={activateEditMode}>
             {props.status || "No status"}
           </span>
