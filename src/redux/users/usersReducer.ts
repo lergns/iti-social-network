@@ -1,32 +1,26 @@
-import { ResultCode, usersAPI, UserType } from "../../api/API";
-import { RootThunkType } from "../redux-store";
+import { ResultCode } from "../../api/api";
+import { InferActionsType, RootThunkType } from "../store";
+import { usersAPI, UserType } from "../../api/users-api";
 
 type UsersInitialStateType = typeof usersInitialState;
-export type UsersReducerActionTypes =
-  | ReturnType<typeof followSuccess>
-  | ReturnType<typeof unfollowSuccess>
-  | ReturnType<typeof setUsers>
-  | ReturnType<typeof setCurrentPage>
-  | ReturnType<typeof setTotalUsersCount>
-  | ReturnType<typeof setIsFetching>
-  | ReturnType<typeof setFollowingProgress>;
+export type UsersReducerActionsType = InferActionsType<typeof usersActions>;
 // TYPES
 
 const usersInitialState = {
   users: [] as Array<UserType>,
   pageSize: 100,
   totalUsersCount: 0,
-  currentPage: 1,
+  currentPageNumber: 1,
   isFetching: false,
-  followingInProgress: [] as Array<number>,
+  followingInProgress: [] as Array<number>, // array of user ids'
 };
 
 export const usersReducer = (
   usersState = usersInitialState,
-  action: UsersReducerActionTypes
+  action: UsersReducerActionsType
 ): UsersInitialStateType => {
   switch (action.type) {
-    case "users/FOLLOW":
+    case "users/FOLLOW_SUCCESS":
       return {
         ...usersState,
         users: usersState.users.map((user) =>
@@ -34,7 +28,7 @@ export const usersReducer = (
         ), // also copying USER to be changed
       };
 
-    case "users/UNFOLLOW":
+    case "users/UNFOLLOW_SUCCESS":
       return {
         ...usersState,
         users: usersState.users.map((user) =>
@@ -45,7 +39,7 @@ export const usersReducer = (
       };
 
     case "users/SET_USERS":
-    case "users/SET_CURRENT_PAGE":
+    case "users/SET_CURRENT_PAGE_NUMBER":
     case "users/SET_TOTAL_USERS_COUNT":
     case "users/SET_IS_FETCHING":
       return { ...usersState, ...action.payload }; // multiple cases with the same code block to execute
@@ -66,71 +60,70 @@ export const usersReducer = (
 };
 // REDUCER
 
-export const followSuccess = (userID: number) =>
-  ({
-    type: "users/FOLLOW",
-    payload: {
-      userID,
-    },
-  } as const);
-export const unfollowSuccess = (userID: number) =>
-  ({
-    type: "users/UNFOLLOW",
-    payload: {
-      userID,
-    },
-  } as const);
-export const setUsers = (users: Array<UserType>) =>
-  ({
-    type: "users/SET_USERS",
-    payload: {
-      users,
-    },
-  } as const);
-export const setCurrentPage = (currentPage: number) =>
-  ({
-    type: "users/SET_CURRENT_PAGE",
-    payload: {
-      currentPage,
-    },
-  } as const);
-export const setTotalUsersCount = (totalUsersCount: number) =>
-  ({
-    type: "users/SET_TOTAL_USERS_COUNT",
-    payload: {
-      totalUsersCount,
-    },
-  } as const);
-export const setIsFetching = (newIsFetching: boolean) =>
-  ({
-    type: "users/SET_IS_FETCHING",
-    payload: {
-      newIsFetching,
-    },
-  } as const);
-export const setFollowingProgress = (
-  userID: number,
-  followingInProgress: boolean
-) =>
-  ({
-    type: "users/SET_FOLLOWING_PROGRESS",
-    payload: {
-      userID,
-      followingInProgress,
-    },
-  } as const);
+export const usersActions = {
+  followSuccess: (userID: number) =>
+    ({
+      type: "users/FOLLOW_SUCCESS",
+      payload: {
+        userID,
+      },
+    } as const),
+  unfollowSuccess: (userID: number) =>
+    ({
+      type: "users/UNFOLLOW_SUCCESS",
+      payload: {
+        userID,
+      },
+    } as const),
+  setUsers: (users: Array<UserType>) =>
+    ({
+      type: "users/SET_USERS",
+      payload: {
+        users,
+      },
+    } as const),
+  setCurrentPageNumber: (currentPageNumber: number) =>
+    ({
+      type: "users/SET_CURRENT_PAGE_NUMBER",
+      payload: {
+        currentPageNumber,
+      },
+    } as const),
+  setTotalUsersCount: (totalUsersCount: number) =>
+    ({
+      type: "users/SET_TOTAL_USERS_COUNT",
+      payload: {
+        totalUsersCount,
+      },
+    } as const),
+  setIsFetching: (newIsFetching: boolean) =>
+    ({
+      type: "users/SET_IS_FETCHING",
+      payload: {
+        newIsFetching,
+      },
+    } as const),
+  setFollowingProgress: (userID: number, followingInProgress: boolean) =>
+    ({
+      type: "users/SET_FOLLOWING_PROGRESS",
+      payload: {
+        userID,
+        followingInProgress,
+      },
+    } as const),
+};
 // ACs
 
 export const fetchUsers = (
   currentPageNumber: number,
   pageSize: number
-): RootThunkType => async (dispatch) => {
-  dispatch(setIsFetching(true));
+): RootThunkType<UsersReducerActionsType> => async (dispatch) => {
+  dispatch(usersActions.setIsFetching(true));
   try {
     const res = await usersAPI.getUsers(currentPageNumber, pageSize);
     if (!res.error) {
-      dispatch(setUsers(res.items));
-      dispatch(setTotalUsersCount(res.totalCount));
+      dispatch(usersActions.setUsers(res.items));
+      dispatch(usersActions.setTotalUsersCount(res.totalCount));
     } else {
       const errMessage = res.error;
       alert(errMessage);
@@ -139,14 +132,16 @@ export const fetchUsers = (
   } catch (e) {
     console.warn(e);
   }
-  dispatch(setIsFetching(false));
+  dispatch(usersActions.setIsFetching(false));
 };
-export const follow = (userID: number): RootThunkType => async (dispatch) => {
-  dispatch(setFollowingProgress(userID, true));
+export const follow = (
+  userID: number
+): RootThunkType<UsersReducerActionsType> => async (dispatch) => {
+  dispatch(usersActions.setFollowingProgress(userID, true));
   try {
     const res = await usersAPI.follow(userID);
     if (res.resultCode === ResultCode.Success) {
-      dispatch(followSuccess(userID));
+      dispatch(usersActions.followSuccess(userID));
     } else {
       const errMessage = res.messages[0];
       alert(errMessage);
@@ -155,14 +150,16 @@ export const follow = (userID: number): RootThunkType => async (dispatch) => {
   } catch (e) {
     console.warn(e);
   }
-  dispatch(setFollowingProgress(userID, false));
+  dispatch(usersActions.setFollowingProgress(userID, false));
 };
-export const unfollow = (userID: number): RootThunkType => async (dispatch) => {
-  dispatch(setFollowingProgress(userID, true));
+export const unfollow = (
+  userID: number
+): RootThunkType<UsersReducerActionsType> => async (dispatch) => {
+  dispatch(usersActions.setFollowingProgress(userID, true));
   try {
     const res = await usersAPI.unfollow(userID);
     if (res.resultCode === ResultCode.Success) {
-      dispatch(unfollowSuccess(userID));
+      dispatch(usersActions.unfollowSuccess(userID));
     } else {
       const errMessage = res.messages[0];
       alert(errMessage);
@@ -171,6 +168,6 @@ export const unfollow = (userID: number): RootThunkType => async (dispatch) => {
   } catch (e) {
     console.warn(e);
   }
-  dispatch(setFollowingProgress(userID, false));
+  dispatch(usersActions.setFollowingProgress(userID, false));
 };
 // TCs

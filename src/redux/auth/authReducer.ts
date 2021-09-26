@@ -1,12 +1,13 @@
-import { authAPI, ResultCode, securityAPI } from "../../api/API";
-import { RootThunkType } from "../redux-store";
+import { InferActionsType, RootThunkType } from "../store";
 import { stopSubmit } from "redux-form";
-import { setCurrentPage } from "../users/usersReducer";
+import { usersActions, UsersReducerActionsType } from "../users/usersReducer";
+import { authAPI } from "../../api/auth-api";
+import { ResultCode } from "../../api/api";
+import { securityAPI } from "../../api/security-api";
+import { FormAction } from "redux-form/lib/actions";
 
 type AuthInitialStateType = typeof authInitialState;
-export type AuthReducerActionTypes =
-  | ReturnType<typeof setAuthUserData>
-  | ReturnType<typeof setCaptchaURL>;
+type AuthReducerActionsType = InferActionsType<typeof authActions>;
 // TYPES
 
 const authInitialState = {
@@ -19,7 +20,7 @@ const authInitialState = {
 
 export const authReducer = (
   authState = authInitialState,
-  action: AuthReducerActionTypes
+  action: AuthReducerActionsType
 ): AuthInitialStateType => {
   switch (action.type) {
     case "auth/SET_AUTH_USER_DATA":
@@ -32,36 +33,40 @@ export const authReducer = (
 };
 // REDUCER
 
-export const setAuthUserData = (
-  id: number | null,
-  email: string | null,
-  login: string | null,
-  isAuth: boolean
-) =>
-  ({
-    type: "auth/SET_AUTH_USER_DATA",
-    payload: {
-      id,
-      email,
-      login,
-      isAuth,
-    },
-  } as const);
-export const setCaptchaURL = (captchaURL: string | null) =>
-  ({
-    type: "auth/SET_CAPTCHA_URL",
-    payload: {
-      captchaURL,
-    },
-  } as const);
+export const authActions = {
+  setAuthUserData: (
+    id: number | null,
+    email: string | null,
+    login: string | null,
+    isAuth: boolean
+  ) =>
+    ({
+      type: "auth/SET_AUTH_USER_DATA",
+      payload: {
+        id,
+        email,
+        login,
+        isAuth,
+      },
+    } as const),
+  setCaptchaURL: (captchaURL: string | null) =>
+    ({
+      type: "auth/SET_CAPTCHA_URL",
+      payload: {
+        captchaURL,
+      },
+    } as const),
+};
 // ACs
 
-export const getAuthUserData = (): RootThunkType => async (dispatch) => {
+export const getAuthUserData = (): RootThunkType<AuthReducerActionsType> => async (
+  dispatch
+) => {
   try {
     const res = await authAPI.me();
     if (res.resultCode === ResultCode.Success) {
       const { id, email, login } = res.data;
-      dispatch(setAuthUserData(id, email, login, true));
+      dispatch(authActions.setAuthUserData(id, email, login, true));
     }
   } catch (e) {
     console.warn(e);
@@ -73,15 +78,17 @@ export const login = (
   password: string,
   rememberMe?: boolean,
   captcha?: string
-): RootThunkType => async (dispatch) => {
+): RootThunkType<
+  AuthReducerActionsType | UsersReducerActionsType | FormAction
+> => async (dispatch) => {
   try {
     const res = await authAPI.login(email, password, rememberMe, captcha);
     if (res.resultCode === ResultCode.Success) {
-      dispatch(getAuthUserData()); // dispatching thunk from another thunk
-      dispatch(setCurrentPage(1));
+      await dispatch(getAuthUserData()); // dispatching thunk from another thunk
+      dispatch(usersActions.setCurrentPageNumber(1));
     } else {
       if (res.resultCode === ResultCode.Captcha) {
-        dispatch(getCaptchaURL()); // dispatching thunk from another thunk
+        await dispatch(getCaptchaURL()); // dispatching thunk from another thunk
       }
       const errMessage = res.messages.length
         ? res.messages[0]
@@ -94,13 +101,15 @@ export const login = (
     alert("An error has occurred. Please try again later.");
   }
 };
-export const logout = (): RootThunkType => async (dispatch) => {
+export const logout = (): RootThunkType<
+  AuthReducerActionsType | UsersReducerActionsType
+> => async (dispatch) => {
   try {
     const res = await authAPI.logout();
     if (res.resultCode === ResultCode.Success) {
-      dispatch(setAuthUserData(null, null, null, false));
-      dispatch(setCaptchaURL(null));
-      dispatch(setCurrentPage(1));
+      dispatch(authActions.setAuthUserData(null, null, null, false));
+      dispatch(authActions.setCaptchaURL(null));
+      dispatch(usersActions.setCurrentPageNumber(1));
     } else {
       const errMessage = res.messages[0];
       alert(errMessage);
@@ -111,11 +120,13 @@ export const logout = (): RootThunkType => async (dispatch) => {
     alert("An error has occurred. Please try again later."); // handling errors by status code
   }
 };
-export const getCaptchaURL = (): RootThunkType => async (dispatch) => {
+export const getCaptchaURL = (): RootThunkType<AuthReducerActionsType> => async (
+  dispatch
+) => {
   try {
     const res = await securityAPI.getCaptcha();
     const captchaURL = res.url;
-    dispatch(setCaptchaURL(captchaURL));
+    dispatch(authActions.setCaptchaURL(captchaURL));
   } catch (e) {
     console.warn(e);
     alert("An error has occurred. Please try again later.");

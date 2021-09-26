@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { selectStatus } from "../../../../redux/profile/profileSelectors";
 
 type ProfileStatusPropsType = {
-  status: string;
+  status: ReturnType<typeof selectStatus>;
   updateProfileStatus: (status: string) => void;
 };
 

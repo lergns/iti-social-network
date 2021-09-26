@@ -1,7 +1,7 @@
 import React from "react";
 import { Profile } from "./Profile";
 import { connect } from "react-redux";
-import { RootStateType } from "../../redux/redux-store";
+import { RootStateType } from "../../redux/store";
 import {
   getProfileStatus,
   getUserProfile,
@@ -18,7 +18,12 @@ import {
 import { selectAuthUserID, selectIsAuth } from "../../redux/auth/authSelectors";
 // IMPORTS
 
-type MapStatePropsType = ReturnType<typeof mapStateToProps>;
+type MapStatePropsType = {
+  userProfile: ReturnType<typeof selectUserProfile>;
+  status: ReturnType<typeof selectStatus>;
+  authUserID: ReturnType<typeof selectAuthUserID>;
+  isAuth: ReturnType<typeof selectIsAuth>;
+};
 type MapDispatchPropsType = {
   getUserProfile: (userID: number) => void;
   getProfileStatus: (userID: number) => void;
@@ -69,7 +74,7 @@ class ProfileClassContainer extends React.PureComponent<ProfileClassContainerPro
   };
 }
 
-const mapStateToProps = (state: RootStateType) => ({
+const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   userProfile: selectUserProfile(state),
   status: selectStatus(state),
   authUserID: selectAuthUserID(state),

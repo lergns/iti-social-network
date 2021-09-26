@@ -1,6 +1,5 @@
 import {
-  addPost,
-  deletePost,
+  profileActions,
   ProfileInitialStateType,
   profileReducer,
 } from "./profileReducer";
@@ -33,7 +32,10 @@ const initialState: ProfileInitialStateType = {
 
 test("new post should be added properly", () => {
   const testText = "test text";
-  const updatedState = profileReducer(initialState, addPost(testText));
+  const updatedState = profileReducer(
+    initialState,
+    profileActions.addPost(testText)
+  );
 
   expect(updatedState.posts.length).toBe(initialState.posts.length + 1);
   expect(updatedState.posts[0].id).toBe(initialState.posts.length + 1);
@@ -45,7 +47,10 @@ test("new post should be added properly", () => {
 
 test("existing post should be deleted properly", () => {
   const postID = 1;
-  const updatedState = profileReducer(initialState, deletePost(postID));
+  const updatedState = profileReducer(
+    initialState,
+    profileActions.deletePost(postID)
+  );
 
   expect(updatedState.posts[0].postText).toBe(initialState.posts[1].postText);
   expect(updatedState.posts.length).toBe(initialState.posts.length - 1);
@@ -53,7 +58,10 @@ test("existing post should be deleted properly", () => {
 
 test("non-existing post deletion shouldn't mutate existing posts", () => {
   const postID = 100;
-  const updatedState = profileReducer(initialState, deletePost(postID));
+  const updatedState = profileReducer(
+    initialState,
+    profileActions.deletePost(postID)
+  );
 
   expect(updatedState.posts[0].likesCount).toBe(
     initialState.posts[0].likesCount

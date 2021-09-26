@@ -1,18 +1,25 @@
 import React from "react";
-import { UserType } from "../../api/API";
 import { Paginator } from "../common/Paginator/Paginator";
 import { User } from "./User/User";
+import {
+  selectCurrentPageNumber,
+  selectFollowingInProgress,
+  selectPageSize,
+  selectTotalUsersCount,
+  selectUsers,
+} from "../../redux/users/usersSelectors";
+import { selectIsAuth } from "../../redux/auth/authSelectors";
 
 type UsersPropsType = {
-  users: Array<UserType>;
-  pageSize: number;
-  totalUsersCount: number;
-  currentPage: number;
-  followingInProgress: Array<number>;
-  onPageChange: (page: number) => void;
+  users: ReturnType<typeof selectUsers>;
+  pageSize: ReturnType<typeof selectPageSize>;
+  totalUsersCount: ReturnType<typeof selectTotalUsersCount>;
+  currentPageNumber: ReturnType<typeof selectCurrentPageNumber>;
+  followingInProgress: ReturnType<typeof selectFollowingInProgress>;
+  onPageChange: (pageNumber: number) => void;
   follow: (userID: number) => void;
   unfollow: (userID: number) => void;
-  isAuth: boolean;
+  isAuth: ReturnType<typeof selectIsAuth>;
 };
 
 export const Users = React.memo(
@@ -20,7 +27,7 @@ export const Users = React.memo(
     totalUsersCount,
     pageSize,
     onPageChange,
-    currentPage,
+    currentPageNumber,
     users,
     followingInProgress,
     follow,
@@ -30,7 +37,7 @@ export const Users = React.memo(
     return (
       <div>
         <Paginator
-          currentPage={currentPage}
+          currentPageNumber={currentPageNumber}
           onPageChange={onPageChange}
           pageSize={pageSize}
           totalItemsCount={totalUsersCount}

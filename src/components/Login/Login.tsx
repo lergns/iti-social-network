@@ -19,6 +19,9 @@ export const Login = React.memo(
       return (
         <div>
           <h1>Log in</h1>
+          <p>
+            Email: free@samuraijs.com <br /> Password: free
+          </p>
           <LoginForm onSubmit={onSubmit} captchaURL={captchaURL} />
         </div>
       );

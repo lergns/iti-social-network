@@ -1,15 +1,15 @@
-import { RootThunkType } from "../redux-store";
+import { InferActionsType, RootThunkType } from "../store";
 import { getAuthUserData } from "../auth/authReducer";
 
 type AppInitialStateType = typeof appInitialState;
-export type AppReducerActionTypes = ReturnType<typeof setInitialized>;
+type AppReducerActionsType = InferActionsType<typeof appActions>;
 // TYPES
 
 const appInitialState = { isInitialized: false };
 
 export const appReducer = (
   appState = appInitialState,
-  action: AppReducerActionTypes
+  action: AppReducerActionsType
 ): AppInitialStateType => {
   switch (action.type) {
     case "app/SET_INITIALIZED":
@@ -21,20 +21,24 @@ export const appReducer = (
 };
 // REDUCER
 
-export const setInitialized = (isInitialized: boolean) =>
-  ({
-    type: "app/SET_INITIALIZED",
-    payload: {
-      isInitialized,
-    },
-  } as const);
+export const appActions = {
+  setInitialized: (isInitialized: boolean) =>
+    ({
+      type: "app/SET_INITIALIZED",
+      payload: {
+        isInitialized,
+      },
+    } as const),
+};
 // ACs
 
-export const initializeApp = (): RootThunkType => async (dispatch) => {
+export const initializeApp = (): RootThunkType<AppReducerActionsType> => async (
+  dispatch
+) => {
   try {
     // dispatch(getAuthUserData()) - returns promise
     await dispatch(getAuthUserData());
-    dispatch(setInitialized(true));
+    dispatch(appActions.setInitialized(true));
   } catch (e) {
     console.warn(e);
   }

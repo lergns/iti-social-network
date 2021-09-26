@@ -1,6 +1,6 @@
-import { RootStateType } from "../redux-store";
-import { UserProfileType } from "../../api/API";
+import { RootStateType } from "../store";
 import { PostType } from "./profileReducer";
+import { UserProfileType } from "../../api/profile-api";
 
 export const selectUserProfile = (state: RootStateType): UserProfileType =>
   state.profilePage.userProfile;

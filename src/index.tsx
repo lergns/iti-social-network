@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-import { store } from "./redux/redux-store";
+import { store } from "./redux/store";
 import ReactDOM from "react-dom";
 import { AppContainer } from "./AppContainer";
 import { HashRouter } from "react-router-dom";

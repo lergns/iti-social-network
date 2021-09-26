@@ -4,27 +4,34 @@ import "./AppContainer.css";
 import { HeaderContainer } from "./components/Header/HeaderContainer";
 import { Navbar } from "./components/Navbar/Navbar";
 import { connect } from "react-redux";
-import { RootStateType } from "./redux/redux-store";
+import { RootStateType } from "./redux/store";
 import { compose } from "redux";
 import { initializeApp } from "./redux/app/appReducer";
 import { Preloader } from "./components/common/Preloader/Preloader";
 import { selectIsInitialized } from "./redux/app/appSelectors";
 import { withSuspense } from "./hoc/withSuspense";
 
-const UsersContainer = React.lazy(
+const UsersLazyContainer = React.lazy(
   () => import("./components/Users/UsersContainer")
 );
-const ProfileContainer = React.lazy(
+const SuspendedUsersContainer = withSuspense(UsersLazyContainer);
+const ProfileLazyContainer = React.lazy(
   () => import("./components/Profile/ProfileContainer")
 );
-const DialoguesContainer = React.lazy(
+const SuspendedProfileContainer = withSuspense(ProfileLazyContainer);
+const DialoguesLazyContainer = React.lazy(
   () => import("./components/Dialogues/DialoguesContainer")
 );
-const LoginContainer = React.lazy(
+const SuspendedDialoguesContainer = withSuspense(DialoguesLazyContainer);
+const LoginLazyContainer = React.lazy(
   () => import("./components/Login/LoginContainer")
-); // lazy-loaded components
+);
+const SuspendedLoginContainer = withSuspense(LoginLazyContainer);
+// lazy-loaded components
 
-type MapStatePropsType = ReturnType<typeof mapStateToProps>;
+type MapStatePropsType = {
+  isInitialized: ReturnType<typeof selectIsInitialized>;
+};
 type MapDispatchPropsType = {
   initializeApp: () => void;
 };
@@ -65,14 +72,22 @@ class AppClassContainer extends React.PureComponent<AppClassContainerPropsType> 
             <Switch>
               <Route
                 path={"/profile/:userID?"}
-                render={withSuspense(ProfileContainer)}
+                render={() => <SuspendedProfileContainer />}
               />
               <Route
                 path={"/dialogues"}
-                render={withSuspense(DialoguesContainer)}
+                render={() => <SuspendedDialoguesContainer />}
               />
-              <Route path={"/users"} render={withSuspense(UsersContainer)} />
-              <Route path={"/login"} render={withSuspense(LoginContainer)} />
+              <Route
+                path={"/users"}
+                render={() => <SuspendedUsersContainer />}
+              />
+              <Route
+                path={"/login"}
+                render={() => <SuspendedLoginContainer />}
+              />
+              <Route path={"/news"} render={() => <h1>News</h1>} />
+              <Route path={"/settings"} render={() => <h1>Settings</h1>} />
               <Redirect from={"/"} to={"/profile"} />
               <Redirect from={"*"} to={"/profile"} />
             </Switch>
@@ -83,7 +98,7 @@ class AppClassContainer extends React.PureComponent<AppClassContainerPropsType> 
   };
 }
 
-const mapStateToProps = (state: RootStateType) => ({
+const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   isInitialized: selectIsInitialized(state),
 });
 

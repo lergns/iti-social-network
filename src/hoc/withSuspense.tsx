@@ -1,11 +1,12 @@
-import React, { ComponentProps, ComponentType, Suspense } from "react";
+import React, { ComponentType, Suspense } from "react";
 import { Preloader } from "../components/common/Preloader/Preloader";
 
-export function withSuspense<T>(Component: ComponentType<T>) {
-  return (props: ComponentProps<any>) => {
+// WCP === wrapped component props
+export function withSuspense<WCP>(WrappedComponent: ComponentType<WCP>) {
+  return (props: WCP) => {
     return (
       <Suspense fallback={<Preloader />}>
-        <Component {...(props as T)} />
+        <WrappedComponent {...props} />
       </Suspense>
       // <Suspense /> will display <Preloader /> while <ProfileContainer /> is loading
     );

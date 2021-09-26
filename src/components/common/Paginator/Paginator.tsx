@@ -4,8 +4,8 @@ import classes from "./Paginator.module.css";
 type PaginatorPropsType = {
   pageSize: number;
   totalItemsCount: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
+  currentPageNumber: number;
+  onPageChange: (pageNumber: number) => void;
   portionSize: number;
 };
 
@@ -14,7 +14,7 @@ export const Paginator = React.memo(
     totalItemsCount,
     pageSize,
     onPageChange,
-    currentPage,
+    currentPageNumber,
     portionSize,
   }: PaginatorPropsType) => {
     const [portionNumber, setPortionNumber] = useState(1); // initial portion number to be displayed
@@ -54,7 +54,9 @@ export const Paginator = React.memo(
                   onPageChange(page);
                 }}
                 className={
-                  currentPage === page ? classes.selectedPage : classes.page
+                  currentPageNumber === page
+                    ? classes.selectedPage
+                    : classes.page
                 }
               >
                 {page}

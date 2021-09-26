@@ -1,14 +1,17 @@
 import React from "react";
 import classes from "./ProfileInfo.module.css";
 import { Preloader } from "../../common/Preloader/Preloader";
-import { UserProfileType } from "../../../api/API";
 import { ProfileStatus } from "./ProfileStatus/ProfileStatus";
 import { ProfileContacts } from "./ProfileContacts/ProfileContacts";
 import { ProfilePhoto } from "./ProfilePhoto/ProfilePhoto";
+import {
+  selectStatus,
+  selectUserProfile,
+} from "../../../redux/profile/profileSelectors";
 
 type ProfileInfoPropsType = {
-  userProfile: UserProfileType;
-  status: string;
+  userProfile: ReturnType<typeof selectUserProfile>;
+  status: ReturnType<typeof selectStatus>;
   updateProfileStatus: (status: string) => void;
   isProfileOwner: boolean;
   updateProfilePhoto: (photo: File) => void;

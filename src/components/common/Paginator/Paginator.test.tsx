@@ -10,7 +10,7 @@ describe("Paginator component tests", () => {
       <Paginator
         pageSize={1}
         totalItemsCount={11}
-        currentPage={1}
+        currentPageNumber={1}
         onPageChange={() => {}}
         portionSize={10}
       />
@@ -25,7 +25,7 @@ describe("Paginator component tests", () => {
       <Paginator
         pageSize={1}
         totalItemsCount={11}
-        currentPage={1}
+        currentPageNumber={1}
         onPageChange={() => {}}
         portionSize={10}
       />

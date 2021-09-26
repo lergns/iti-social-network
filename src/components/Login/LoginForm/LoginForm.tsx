@@ -3,6 +3,7 @@ import { Field, InjectedFormProps, reduxForm } from "redux-form";
 import { Input } from "../../common/FormControls/FormControls";
 import { requiredField } from "../../../utils/validators/validators";
 import classes from "../../common/FormControls/formControls.module.css";
+import { selectCaptchaURL } from "../../../redux/auth/authSelectors";
 
 export type LoginFormDataType = {
   email: string;
@@ -12,7 +13,7 @@ export type LoginFormDataType = {
 };
 
 type LoginFormPropsType = {
-  captchaURL: null | string;
+  captchaURL: ReturnType<typeof selectCaptchaURL>;
 };
 
 // passing custom props to LoginForm
@@ -41,7 +42,12 @@ const LoginForm: React.FC<
       </div>
 
       <div>
-        <Field component={Input} name={"rememberMe"} type={"checkbox"} />
+        <Field
+          style={{ cursor: "pointer" }}
+          component={Input}
+          name={"rememberMe"}
+          type={"checkbox"}
+        />
         Remember me
       </div>
 
@@ -60,7 +66,7 @@ const LoginForm: React.FC<
       {error && <div className={classes.formLevelError}>{error}</div>}
 
       <div>
-        <button>Log in</button>
+        <button style={{ cursor: "pointer" }}>Log in</button>
       </div>
     </form>
   );

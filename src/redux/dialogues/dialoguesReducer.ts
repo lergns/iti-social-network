@@ -1,3 +1,5 @@
+import { InferActionsType } from "../store";
+
 export type DialogueItemType = {
   id: number;
   personName: string;
@@ -7,7 +9,7 @@ export type MessageType = {
   messageText: string;
 };
 type DialoguesInitialStateType = typeof dialoguesInitialState;
-export type DialoguesReducerActionTypes = ReturnType<typeof sendMessage>;
+type DialoguesReducerActionsType = InferActionsType<typeof dialoguesActions>;
 // TYPES
 
 const dialoguesInitialState = {
@@ -29,7 +31,7 @@ const dialoguesInitialState = {
 
 export const dialoguesReducer = (
   dialoguesState = dialoguesInitialState,
-  action: DialoguesReducerActionTypes
+  action: DialoguesReducerActionsType
 ): DialoguesInitialStateType => {
   switch (action.type) {
     case "dialogues/SEND_MESSAGE": {
@@ -50,11 +52,13 @@ export const dialoguesReducer = (
 };
 // REDUCER
 
-export const sendMessage = (newMessageText: string) =>
-  ({
-    type: "dialogues/SEND_MESSAGE",
-    payload: {
-      newMessageText,
-    },
-  } as const);
+export const dialoguesActions = {
+  sendMessage: (newMessageText: string) =>
+    ({
+      type: "dialogues/SEND_MESSAGE",
+      payload: {
+        newMessageText,
+      },
+    } as const),
+};
 // ACs

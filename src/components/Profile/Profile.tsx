@@ -1,11 +1,14 @@
 import React from "react";
 import { ProfileInfo } from "./ProfileInfo/ProfileInfo";
 import { MyPostsContainer } from "./MyPosts/MyPostsContainer";
-import { UserProfileType } from "../../api/API";
+import {
+  selectStatus,
+  selectUserProfile,
+} from "../../redux/profile/profileSelectors";
 
 type ProfilePropsType = {
-  userProfile: UserProfileType;
-  status: string;
+  userProfile: ReturnType<typeof selectUserProfile>;
+  status: ReturnType<typeof selectStatus>;
   updateProfileStatus: (status: string) => void;
   isProfileOwner: boolean;
   updateProfilePhoto: (photo: File) => void;

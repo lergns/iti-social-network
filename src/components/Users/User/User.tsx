@@ -2,14 +2,16 @@ import React from "react";
 import classes from "./User.module.css";
 import userAva from "../../../assets/images/userAva.png";
 import { NavLink } from "react-router-dom";
-import { UserType } from "../../../api/API";
+import { UserType } from "../../../api/users-api";
+import { selectFollowingInProgress } from "../../../redux/users/usersSelectors";
+import { selectIsAuth } from "../../../redux/auth/authSelectors";
 
 type UserPropsType = {
   user: UserType;
-  followingInProgress: Array<number>;
+  followingInProgress: ReturnType<typeof selectFollowingInProgress>;
   follow: (userID: number) => void;
   unfollow: (userID: number) => void;
-  isAuth: boolean;
+  isAuth: ReturnType<typeof selectIsAuth>;
 };
 
 export const User = React.memo(

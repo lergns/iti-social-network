@@ -1,16 +1,16 @@
 import { connect } from "react-redux";
-import { RootStateType } from "../../redux/redux-store";
+import { RootStateType } from "../../redux/store";
 import {
-  follow,
   fetchUsers,
-  setCurrentPage,
+  follow,
   unfollow,
+  usersActions,
 } from "../../redux/users/usersReducer";
 import { Users } from "./Users";
 import React from "react";
 import { Preloader } from "../common/Preloader/Preloader";
 import {
-  selectCurrentPage,
+  selectCurrentPageNumber,
   selectFollowingInProgress,
   selectIsFetching,
   selectPageSize,
@@ -20,9 +20,17 @@ import {
 import { selectIsAuth } from "../../redux/auth/authSelectors";
 // IMPORTS
 
-type MapStatePropsType = ReturnType<typeof mapStateToProps>;
+type MapStatePropsType = {
+  users: ReturnType<typeof selectUsers>;
+  pageSize: ReturnType<typeof selectPageSize>;
+  totalUsersCount: ReturnType<typeof selectTotalUsersCount>;
+  currentPageNumber: ReturnType<typeof selectCurrentPageNumber>;
+  isFetching: ReturnType<typeof selectIsFetching>;
+  followingInProgress: ReturnType<typeof selectFollowingInProgress>;
+  isAuth: ReturnType<typeof selectIsAuth>;
+};
 type MapDispatchPropsType = {
-  setCurrentPage: (currentPage: number) => void;
+  setCurrentPageNumber: (currentPage: number) => void;
   follow: (userID: number) => void;
   unfollow: (userID: number) => void;
   fetchUsers: (currentPageNumber: number, pageSize: number) => void;
@@ -33,39 +41,39 @@ type UsersClassContainerPropsType = MapStatePropsType & MapDispatchPropsType;
 // UsersContainer --> UsersClassContainer --> Users
 class UsersClassContainer extends React.PureComponent<UsersClassContainerPropsType> {
   componentDidMount() {
-    this.props.fetchUsers(this.props.currentPage, this.props.pageSize);
+    this.props.fetchUsers(this.props.currentPageNumber, this.props.pageSize);
   }
 
   onPageChange = (pageNumber: number) => {
-    this.props.setCurrentPage(pageNumber);
+    this.props.setCurrentPageNumber(pageNumber);
     this.props.fetchUsers(pageNumber, this.props.pageSize);
   };
 
   render = () => {
     return (
-      <>
+      <div>
         {this.props.isFetching && <Preloader />}
         <Users
           users={this.props.users}
           totalUsersCount={this.props.totalUsersCount}
           pageSize={this.props.pageSize}
-          currentPage={this.props.currentPage}
+          currentPageNumber={this.props.currentPageNumber}
           onPageChange={this.onPageChange}
           followingInProgress={this.props.followingInProgress}
           follow={this.props.follow}
           unfollow={this.props.unfollow}
           isAuth={this.props.isAuth}
         />
-      </>
+      </div>
     );
   };
 }
 
-const mapStateToProps = (state: RootStateType) => ({
+const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   users: selectUsers(state),
   pageSize: selectPageSize(state),
   totalUsersCount: selectTotalUsersCount(state),
-  currentPage: selectCurrentPage(state),
+  currentPageNumber: selectCurrentPageNumber(state),
   isFetching: selectIsFetching(state),
   followingInProgress: selectFollowingInProgress(state),
   isAuth: selectIsAuth(state),
@@ -77,7 +85,7 @@ const UsersContainer = connect<
   unknown,
   RootStateType
 >(mapStateToProps, {
-  setCurrentPage,
+  setCurrentPageNumber: usersActions.setCurrentPageNumber,
   follow,
   unfollow,
   fetchUsers,

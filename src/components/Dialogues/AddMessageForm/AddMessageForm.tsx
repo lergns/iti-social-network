@@ -24,7 +24,7 @@ const AddMessageForm: React.FC<
         />
       </div>
       <div>
-        <button>Send</button>
+        <button style={{ cursor: "pointer" }}>Send</button>
       </div>
     </form>
   );

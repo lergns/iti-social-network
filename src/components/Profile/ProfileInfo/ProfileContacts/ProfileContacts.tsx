@@ -1,5 +1,4 @@
 import React from "react";
-import { ProfileContactsType } from "../../../../api/API";
 import github from "../../../../assets/images/icons/github.png";
 import facebook from "../../../../assets/images/icons/facebook.png";
 import instagram from "../../../../assets/images/icons/instagram.png";
@@ -8,6 +7,7 @@ import vk from "../../../../assets/images/icons/vk.png";
 import youtube from "../../../../assets/images/icons/youtube.png";
 import website from "../../../../assets/images/icons/website.png";
 import classes from "./ProfileContacts.module.css";
+import { ProfileContactsType } from "../../../../api/profile-api";
 
 type ProfileContactsPropsType = {
   profileContacts: ProfileContactsType;

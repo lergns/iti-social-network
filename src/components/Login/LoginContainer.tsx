@@ -1,10 +1,13 @@
-import { RootStateType } from "../../redux/redux-store";
+import { RootStateType } from "../../redux/store";
 import { Login } from "./Login";
 import { connect } from "react-redux";
 import { login } from "../../redux/auth/authReducer";
 import { selectCaptchaURL, selectIsAuth } from "../../redux/auth/authSelectors";
 
-type MapStatePropsType = ReturnType<typeof mapStateToProps>;
+type MapStatePropsType = {
+  isAuth: ReturnType<typeof selectIsAuth>;
+  captchaURL: ReturnType<typeof selectCaptchaURL>;
+};
 type MapDispatchPropsType = {
   login: (
     email: string,
@@ -15,7 +18,7 @@ type MapDispatchPropsType = {
 };
 export type LoginPropsType = MapStatePropsType & MapDispatchPropsType;
 
-const mapStateToProps = (state: RootStateType) => ({
+const mapStateToProps = (state: RootStateType): MapStatePropsType => ({
   isAuth: selectIsAuth(state),
   captchaURL: selectCaptchaURL(state),
 });

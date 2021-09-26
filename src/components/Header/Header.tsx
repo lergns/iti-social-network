@@ -1,12 +1,7 @@
 import { NavLink } from "react-router-dom";
 import React from "react";
 import classes from "./Header.module.css";
-
-type HeaderPropsType = {
-  isAuth: boolean;
-  login: string | null;
-  logout: () => void;
-};
+import { HeaderPropsType } from "./HeaderContainer";
 
 export const Header = React.memo(
   ({ isAuth, login, logout }: HeaderPropsType) => {
@@ -19,7 +14,10 @@ export const Header = React.memo(
         <div className={classes.loginBlock}>
           {isAuth ? (
             <div>
-              {login} - <button onClick={logout}>Log out</button>
+              {login} -{" "}
+              <button style={{ cursor: "pointer" }} onClick={logout}>
+                Log out
+              </button>
             </div>
           ) : (
             <NavLink to={"/login"}>Log in</NavLink>

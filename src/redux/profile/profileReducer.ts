@@ -1,10 +1,6 @@
-import {
-  PhotosType,
-  profileAPI,
-  ResultCode,
-  UserProfileType,
-} from "../../api/API";
-import { RootThunkType } from "../redux-store";
+import { InferActionsType, RootThunkType } from "../store";
+import { PhotosType, profileAPI, UserProfileType } from "../../api/profile-api";
+import { ResultCode } from "../../api/api";
 
 export type PostType = {
   id: number;
@@ -12,12 +8,7 @@ export type PostType = {
   likesCount: number;
 };
 export type ProfileInitialStateType = typeof profileInitialState;
-export type ProfileReducerActionTypes =
-  | ReturnType<typeof addPost>
-  | ReturnType<typeof deletePost>
-  | ReturnType<typeof setProfileStatus>
-  | ReturnType<typeof setProfilePhoto>
-  | ReturnType<typeof setUserProfile>;
+type ProfileReducerActionsType = InferActionsType<typeof profileActions>;
 // TYPES
 
 const profileInitialState = {
@@ -31,7 +22,7 @@ const profileInitialState = {
 
 export const profileReducer = (
   profileState = profileInitialState,
-  action: ProfileReducerActionTypes
+  action: ProfileReducerActionsType
 ): ProfileInitialStateType => {
   switch (action.type) {
     case "profile/ADD_POST": {
@@ -72,70 +63,72 @@ export const profileReducer = (
 };
 // REDUCER
 
-export const addPost = (newPostText: string) =>
-  ({
-    type: "profile/ADD_POST",
-    payload: {
-      newPostText,
-    },
-  } as const);
-export const deletePost = (postID: number) =>
-  ({
-    type: "profile/DELETE_POST",
-    payload: {
-      postID,
-    },
-  } as const);
-export const setUserProfile = (userProfile: UserProfileType) =>
-  ({
-    type: "profile/SET_USER_PROFILE",
-    payload: {
-      userProfile,
-    },
-  } as const);
-export const setProfileStatus = (status: string) =>
-  ({
-    type: "profile/SET_PROFILE_STATUS",
-    payload: {
-      status,
-    },
-  } as const);
-export const setProfilePhoto = (photos: PhotosType) =>
-  ({
-    type: "profile/SET_PROFILE_PHOTO",
-    payload: {
-      photos,
-    },
-  } as const);
+export const profileActions = {
+  addPost: (newPostText: string) =>
+    ({
+      type: "profile/ADD_POST",
+      payload: {
+        newPostText,
+      },
+    } as const),
+  deletePost: (postID: number) =>
+    ({
+      type: "profile/DELETE_POST",
+      payload: {
+        postID,
+      },
+    } as const),
+  setUserProfile: (userProfile: UserProfileType) =>
+    ({
+      type: "profile/SET_USER_PROFILE",
+      payload: {
+        userProfile,
+      },
+    } as const),
+  setProfileStatus: (status: string) =>
+    ({
+      type: "profile/SET_PROFILE_STATUS",
+      payload: {
+        status,
+      },
+    } as const),
+  setProfilePhoto: (photos: PhotosType) =>
+    ({
+      type: "profile/SET_PROFILE_PHOTO",
+      payload: {
+        photos,
+      },
+    } as const),
+};
 // ACs
 
-export const getUserProfile = (userID: number): RootThunkType => async (
-  dispatch
-) => {
+export const getUserProfile = (
+  userID: number
+): RootThunkType<ProfileReducerActionsType> => async (dispatch) => {
   try {
     const res = await profileAPI.getProfile(userID);
-    dispatch(setUserProfile(res));
+    dispatch(profileActions.setUserProfile(res));
   } catch (e) {
     console.warn(e);
   }
 };
-export const getProfileStatus = (userID: number): RootThunkType => async (
-  dispatch
-) => {
+export const getProfileStatus = (
+  userID: number
+): RootThunkType<ProfileReducerActionsType> => async (dispatch) => {
   try {
     const res = await profileAPI.getStatus(userID);
-    dispatch(setProfileStatus(res));
+    dispatch(profileActions.setProfileStatus(res));
   } catch (e) {
     console.warn(e);
   }
 };
-export const updateProfileStatus = (status: string): RootThunkType => async (
-  dispatch
-) => {
+export const updateProfileStatus = (
+  status: string
+): RootThunkType<ProfileReducerActionsType> => async (dispatch) => {
   try {
     const res = await profileAPI.updateStatus(status);
     if (res.resultCode === ResultCode.Success) {
-      dispatch(setProfileStatus(status));
+      dispatch(profileActions.setProfileStatus(status));
     } else {
       const errMessage = res.messages[0];
       alert(errMessage);
@@ -145,13 +138,13 @@ export const updateProfileStatus = (status: string): RootThunkType => async (
     console.warn(e);
   }
 };
-export const updateProfilePhoto = (photo: File): RootThunkType => async (
-  dispatch
-) => {
+export const updateProfilePhoto = (
+  photo: File
+): RootThunkType<ProfileReducerActionsType> => async (dispatch) => {
   try {
     const res = await profileAPI.updatePhoto(photo);
     if (res.resultCode === ResultCode.Success) {
-      dispatch(setProfilePhoto(res.data.photos));
+      dispatch(profileActions.setProfilePhoto(res.data.photos));
     } else {
       const errMessage = res.messages[0];
       alert(errMessage);
